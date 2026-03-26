@@ -29,10 +29,16 @@ births<-birth_raw|>
 tfr_data <- births |> filter(DataSeries == "Total Fertility Rate (TFR)")
 tlb_data <- births |> filter(DataSeries == "Total Live-Births")
 
-## Fit three types of trend models to compare their performance
+# Fit three types of trend models to compare their performance
+# Use I() to treat arithmetic operators as identity functions within the formula
 tfr_fit <- tfr_data |>
   model(
     linear = TSLM(value ~ trend()),
     quad   = TSLM(value ~ trend() + I(trend()^2)),
     cubic  = TSLM(value ~ trend() + I(trend()^2) + I(trend()^3))
   )
+
+#View fit statistics
+glance(tfr_fit) |> arrange(AICc)
+
+
