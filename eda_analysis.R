@@ -25,3 +25,6 @@ births<-birth_raw|>
   )|>
   as_tsibble(key = DataSeries,index = Year)
 
+#Create a new tsibble for this data subset
+tfr_data <- births |> filter(DataSeries == "Total Fertility Rate (TFR)")
+tlb_data <- births |> filter(DataSeries == "Total Live-Births")
