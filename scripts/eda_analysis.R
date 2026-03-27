@@ -33,6 +33,7 @@ births <- birth_raw |>
 tfr_data <- births |> filter(DataSeries == "Total Fertility Rate (TFR)")
 tlb_data <- births |> filter(DataSeries == "Total Live-Births")
 
+#For TFR
 # Fit three types of trend models to compare their performance
 # Use I() to treat arithmetic operators as identity functions within the formula
 tfr_fit <- tfr_data |>
@@ -57,5 +58,43 @@ tfr_aug |>
   features(.resid, portmanteau_tests)
 tfr_aug |> features(.resid, portmanteau_tests)
 
+#Check for remaining seasonality and stationarity
+tfr_aug |> 
+  ACF(.resid) |> 
+  autoplot() + 
+  labs(title = "Residuals ACF Plot - Cubic Model (TFR)")
+
+# Visualizing the raw time series data for TFR to observe historical trends
+tfr_data |> 
+  autoplot(value) + 
+  labs(
+    title = "Singapore Total Fertility Rate (1960-2024)",
+  )
+
+#For TLB
+#As same as TFR
+tlb_fit <- tlb_data |>
+  model(
+    linear = TSLM(value ~ trend()),
+    quad   = TSLM(value ~ trend() + I(trend()^2)),
+    cubic  = TSLM(value ~ trend() + I(trend()^2) + I(trend()^3))
+  )
+
+#View fit statistics
+glance(tlb_fit) |> arrange(AICc)
+
+tlb_aug <- augment(tlb_fit) |> filter(.model == "cubic")
+
+#White Noise check
+tlb_aug |> autoplot(.resid) + labs(title = "Cubic Model Residuals - TLB")
+
+#ACF
+tlb_aug |> ACF(.resid) |> autoplot() + labs(title = "Residuals ACF Plot - TLB")
+
+tlb_data |> 
+  autoplot(value) + 
+  labs(
+    title = "Singapore Total Live-Births (1960-2024)",
+  )
 
 
