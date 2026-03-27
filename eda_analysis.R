@@ -11,19 +11,23 @@ birth_raw<-read.csv("BirthsAndFertilityRatesAnnual.csv")
 
 #Reshape wide data to long format to meet tsibble requirements 
 #Use values_transform to ensure consistent numeric type across all years
-births<-birth_raw|>
+births <- birth_raw |>
   pivot_longer(
-    cols=-DataSeries,
-    names_to = "Year",
+    cols = -DataSeries, 
+    names_to = "Year_Raw", 
     values_to = "value",
     values_transform = list(value = as.numeric)
-  )|>
-  mutate(Year=as.integer(Year))|>
+  ) |>
+  mutate(
+    # To address the errors found during data loading, I added these two lines for better data handling and optimization
+    Year = as.integer(gsub("X", "", Year_Raw)),
+    DataSeries = trimws(DataSeries)
+  ) |>
   filter(
-    Year>=1960,Year<=2024,
-    DataSeries %in% c("Total Fertility Rate","Total Live-Births")
-  )|>
-  as_tsibble(key = DataSeries,index = Year)
+    Year >= 1960, Year <= 2024,
+    DataSeries %in% c("Total Fertility Rate (TFR)", "Total Live-Births")
+  ) |>
+  as_tsibble(key = DataSeries, index = Year)
 
 #Create a new tsibble for this data subset
 tfr_data <- births |> filter(DataSeries == "Total Fertility Rate (TFR)")
@@ -39,6 +43,19 @@ tfr_fit <- tfr_data |>
   )
 
 #View fit statistics
+tidy(tfr_fit)
 glance(tfr_fit) |> arrange(AICc)
+
+#Extract fitted values and residuals for the cubic model
+tfr_aug <- augment(tfr_fit) |> filter(.model == "cubic")
+
+#White Noise check
+tfr_aug |> autoplot(.resid) + labs(title = "Cubic Model Residuals -TFR")
+
+#Perform Portmanteau tests to statistically verify if residuals are white noise
+tfr_aug |> 
+  features(.resid, portmanteau_tests)
+tfr_aug |> features(.resid, portmanteau_tests)
+
 
 
