@@ -33,6 +33,12 @@ births <- birth_raw |>
 tfr_data <- births |> filter(DataSeries == "Total Fertility Rate (TFR)")
 tlb_data <- births |> filter(DataSeries == "Total Live-Births")
 
+#Explore the raw time series data
+tfr_data|> ACF(value) |> autoplot()
+tfr_data|> PACF(value) |> autoplot()
+tlb_data |> ACF(value) |> autoplot()
+tlb_data|> PACF(value) |> autoplot()
+
 #For TFR
 # Fit three types of trend models to compare their performance
 # Use I() to treat arithmetic operators as identity functions within the formula
