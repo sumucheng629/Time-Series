@@ -33,11 +33,28 @@ births <- birth_raw |>
 tfr_data <- births |> filter(DataSeries == "Total Fertility Rate (TFR)")
 tlb_data <- births |> filter(DataSeries == "Total Live-Births")
 
+# Visualizing the raw time series data for TFR to observe historical trends
+tfr_data |> autoplot(value) + labs(title = "Singapore Total Fertility Rate (1960-2024)",)
+
+#TLB
+tlb_data |> autoplot(value) + labs(title = "Singapore Total Live-Births (1960-2024)",)
+
 #Explore the raw time series data
 tfr_data|> ACF(value) |> autoplot()
 tfr_data|> PACF(value) |> autoplot()
-tlb_data |> ACF(value) |> autoplot()
+tlb_data|> ACF(value) |> autoplot()
 tlb_data|> PACF(value) |> autoplot()
+
+#First Difference
+tfr_diff <- tfr_data |>mutate(diff1 = difference(value))
+tlb_diff <- tlb_data |>mutate(diff1 = difference(value))
+
+#ACF / PACF after differencing
+tfr_diff |>filter(!is.na(diff1)) |>ACF(diff1) |>autoplot() +labs(title = "ACF of differenced TFR")
+tfr_diff |>filter(!is.na(diff1)) |>PACF(diff1) |>autoplot() +labs(title = "PACF of differenced TFR")
+
+tlb_diff |>filter(!is.na(diff1)) |>ACF(diff1) |>autoplot() +labs(title = "ACF of differenced TLB")
+tlb_diff |>filter(!is.na(diff1)) |>PACF(diff1) |>autoplot() +labs(title = "PACF of differenced TLB")
 
 #For TFR
 # Fit three types of trend models to compare their performance
@@ -67,10 +84,6 @@ tfr_aug |> features(.resid, portmanteau_tests)
 #Check for remaining seasonality and stationarity
 tfr_aug |> 
   ACF(.resid) |>autoplot() + labs(title = "Residuals ACF Plot - Cubic Model (TFR)")
-
-# Visualizing the raw time series data for TFR to observe historical trends
-tfr_data |> autoplot(value) + labs(title = "Singapore Total Fertility Rate (1960-2024)",)
-
 #For TLB
 #As same as TFR
 tlb_fit <- tlb_data |>
@@ -90,8 +103,6 @@ tlb_aug |> autoplot(.resid) + labs(title = "Cubic Model Residuals - TLB")
 
 #ACF
 tlb_aug |> ACF(.resid) |> autoplot() + labs(title = "Residuals ACF Plot - TLB")
-
-tlb_data |> autoplot(value) + labs(title = "Singapore Total Live-Births (1960-2024)",)
 
 #Portmanteau test
 tfr_test <- tfr_aug |> features(.resid, portmanteau_tests)
