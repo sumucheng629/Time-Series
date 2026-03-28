@@ -87,4 +87,9 @@ tlb_aug |> ACF(.resid) |> autoplot() + labs(title = "Residuals ACF Plot - TLB")
 
 tlb_data |> autoplot(value) + labs(title = "Singapore Total Live-Births (1960-2024)",)
 
+#Portmanteau test
+tfr_test <- tfr_aug |> features(.resid, portmanteau_tests)
+print(tfr_test)
 
+tlb_test <- tlb_aug |> features(.resid, portmanteau_tests)
+print(tlb_test)
