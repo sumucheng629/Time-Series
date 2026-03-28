@@ -60,16 +60,10 @@ tfr_aug |> features(.resid, portmanteau_tests)
 
 #Check for remaining seasonality and stationarity
 tfr_aug |> 
-  ACF(.resid) |> 
-  autoplot() + 
-  labs(title = "Residuals ACF Plot - Cubic Model (TFR)")
+  ACF(.resid) |>autoplot() + labs(title = "Residuals ACF Plot - Cubic Model (TFR)")
 
 # Visualizing the raw time series data for TFR to observe historical trends
-tfr_data |> 
-  autoplot(value) + 
-  labs(
-    title = "Singapore Total Fertility Rate (1960-2024)",
-  )
+tfr_data |> autoplot(value) + labs(title = "Singapore Total Fertility Rate (1960-2024)",)
 
 #For TLB
 #As same as TFR
@@ -91,10 +85,6 @@ tlb_aug |> autoplot(.resid) + labs(title = "Cubic Model Residuals - TLB")
 #ACF
 tlb_aug |> ACF(.resid) |> autoplot() + labs(title = "Residuals ACF Plot - TLB")
 
-tlb_data |> 
-  autoplot(value) + 
-  labs(
-    title = "Singapore Total Live-Births (1960-2024)",
-  )
+tlb_data |> autoplot(value) + labs(title = "Singapore Total Live-Births (1960-2024)",)
 
 
