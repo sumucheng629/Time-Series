@@ -122,22 +122,10 @@ tfr_test  <- births_test  |> filter(DataSeries == "Total Fertility Rate (TFR)")
 tlb_train <- births_train |> filter(DataSeries == "Total Live-Births")
 tlb_test  <- births_test  |> filter(DataSeries == "Total Live-Births")
 
-#Fit one ARIMA model for TFR using the training period
-tfr_model <- tfr_train |>model(arima = ARIMA(value))
+#Fit an ARIMA(1,1,0) model to the TFR training data
+tfr_model_arima <- tfr_train |>model(tfr_arima = ARIMA(value ~ pdq(1,1,0)))
 
-#Summary
-report(tfr_model)
-glance(tfr_model)
+#View the fitted coefficients
+tidy(tfr_model_arima)
 
-#Forecast for 2013-2024
-tfr_fc <- tfr_model |>forecast(new_data = tfr_test)
-
-#Forecast accuracy
-tfr_accuracy <- accuracy(tfr_fc, tfr_test)
-print(tfr_accuracy)
-
-#Residual diagnostics
-gg_tsresiduals(tfr_model)
-
-augment(tfr_model) |>features(.innov, ljung_box, lag = 10, dof = 0)
 
