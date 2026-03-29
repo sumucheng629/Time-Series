@@ -138,3 +138,18 @@ tfr_train |>
     title = "TFR Forecast using ARIMA(1,1,0)",
   )
 
+#For as the same as TFR
+#Fit an ARIMA(1,1,0) model
+tlb_model_arima <- tlb_train |>model(tlb_arima = ARIMA(value ~ pdq(1,1,0)))
+
+tidy(tlb_model_arima)
+
+tlb_fc <- tlb_model_arima |>forecast(new_data = tlb_test)
+
+tlb_train |>
+  autoplot(value) +
+  autolayer(tlb_fc) +
+  autolayer(tlb_test, value, colour = "black") +
+  labs(
+    title = "TLB Forecast using ARIMA(1,1,0)",
+  )
