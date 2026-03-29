@@ -110,3 +110,14 @@ print(tfr_test)
 
 tlb_test <- tlb_aug |> features(.resid, portmanteau_tests)
 print(tlb_test)
+
+# Train: 1960-2012
+# Test:  2013-2024
+births_train <- births |> filter(Year <= 2012)
+births_test  <- births |> filter(Year >= 2013, Year <= 2024)
+
+tfr_train <- births_train |> filter(DataSeries == "Total Fertility Rate (TFR)")
+tfr_test  <- births_test  |> filter(DataSeries == "Total Fertility Rate (TFR)")
+
+tlb_train <- births_train |> filter(DataSeries == "Total Live-Births")
+tlb_test  <- births_test  |> filter(DataSeries == "Total Live-Births")
