@@ -1,37 +1,51 @@
-# Singapore Birth and Fertility EDA
+# Exploratory Data Analysis of Singapore Birth and Fertility Data
 
-This repository contains my exploratory data analysis (EDA) for the Singapore birth and fertility time series assignment.
+This repository contains the files and code for my EDA assignment on Singapore birth and fertility data.
 
-## Data
-The dataset contains annual observations from 1960 to 2024.
-In this project, I focus on:
-- Total Live-Births (TLB)
-- Total Fertility Rate (TFR)
+The project mainly looks at two annual time series from 1960 to 2024:
 
-## Purpose
-The purpose of this project is to explore the temporal features of these two series, including:
-- trend
-- autocorrelation
-- stationarity
-- possible trend models
+- **Total Fertility Rate (TFR)**
+- **Total Live-Births (TLB)**
 
-This EDA will also help motivate later forecasting models.
+The main purpose of the analysis is to explore how these two series behave over time and to identify possible forecasting models for the next stage of the project.
 
-## Project structure
-- `data/` : raw dataset
-- `scripts/` : R scripts used for cleaning, EDA, and modelling
-- `figures/` : plots generated from the analysis
-- `report/` : LaTeX report files
+## Repository structure
 
-## Software and packages
-The analysis is conducted in R using packages such as:
-- tsibble
-- feasts
-- fable
-- ggplot2
-- dplyr
-- tidyr
-- readr
+- **data/**  
+  raw data used in the analysis
 
-## Reproducibility
-All results in the report can be reproduced by running the R scripts in the `scripts/` folder.
+- **scripts/**  
+  main R code for the project
+
+- **README.md**  
+  project summary
+
+- **singapore birth-fertility EDA.Rproj**  
+  RStudio project file
+
+## R packages used
+
+The main packages used in this project are:
+
+- **dplyr**
+- **tidyr**
+- **ggplot2**
+- **fable**
+- **tsibble**
+- **feasts**
+
+## Main things done in the analysis
+
+This project includes:
+
+- cleaning and reshaping the raw data
+- plotting the original time series
+- checking ACF and PACF plots
+- first differencing
+- fitting linear, quadratic, and cubic trend models
+- checking residuals
+- fitting an initial ARIMA(1,1,0) model for both TFR and TLB
+
+## Note
+
+Most of the plots were generated directly in R and used in the report, rather than being saved separately here.
