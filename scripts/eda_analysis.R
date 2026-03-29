@@ -10,7 +10,6 @@ setwd("C:\\Users\\33169\\Desktop\\singapore birth-fertility EDA\\data")
 birth_raw<-read.csv("BirthsAndFertilityRatesAnnual.csv")
 
 #Reshape wide data to long format to meet tsibble requirements 
-#Use values_transform to ensure consistent numeric type across all years
 births <- birth_raw |>
   pivot_longer(
     cols = -DataSeries, 
@@ -19,7 +18,7 @@ births <- birth_raw |>
     values_transform = list(value = as.numeric)
   ) |>
   mutate(
-    # To address the errors found during data loading, I added these two lines for better data handling and optimization
+    #To address the errors found during data loading, I added these two lines for better data handling and optimization
     Year = as.integer(gsub("X", "", Year_Raw)),
     DataSeries = trimws(DataSeries)
   ) |>
@@ -33,7 +32,7 @@ births <- birth_raw |>
 tfr_data <- births |> filter(DataSeries == "Total Fertility Rate (TFR)")
 tlb_data <- births |> filter(DataSeries == "Total Live-Births")
 
-# Visualizing the raw time series data for TFR to observe historical trends
+#Visualizing the raw time series data for TFR to observe historical trends
 tfr_data |> autoplot(value) + labs(title = "Singapore Total Fertility Rate (1960-2024)",)
 
 #TLB
@@ -57,8 +56,7 @@ tlb_diff |>filter(!is.na(diff1)) |>ACF(diff1) |>autoplot() +labs(title = "ACF of
 tlb_diff |>filter(!is.na(diff1)) |>PACF(diff1) |>autoplot() +labs(title = "PACF of differenced TLB")
 
 #For TFR
-# Fit three types of trend models to compare their performance
-# Use I() to treat arithmetic operators as identity functions within the formula
+#Fit three types of trend models to compare their performance
 tfr_fit <- tfr_data |>
   model(
     linear = TSLM(value ~ trend()),
@@ -128,4 +126,15 @@ tfr_model_arima <- tfr_train |>model(tfr_arima = ARIMA(value ~ pdq(1,1,0)))
 #View the fitted coefficients
 tidy(tfr_model_arima)
 
+#Forecast over the full test period
+tfr_fc <- tfr_model_arima |>forecast(new_data = tfr_test)
+
+#Plotting
+tfr_train |>
+  autoplot(value) +
+  autolayer(tfr_fc) +
+  autolayer(tfr_test, value, colour = "black") +
+  labs(
+    title = "TFR Forecast using ARIMA(1,1,0)",
+  )
 
