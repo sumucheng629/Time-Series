@@ -132,3 +132,12 @@ glance(tfr_model)
 #Forecast for 2013-2024
 tfr_fc <- tfr_model |>forecast(new_data = tfr_test)
 
+#Forecast accuracy
+tfr_accuracy <- accuracy(tfr_fc, tfr_test)
+print(tfr_accuracy)
+
+#Residual diagnostics
+gg_tsresiduals(tfr_model)
+
+augment(tfr_model) |>features(.innov, ljung_box, lag = 10, dof = 0)
+
