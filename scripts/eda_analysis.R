@@ -121,3 +121,14 @@ tfr_test  <- births_test  |> filter(DataSeries == "Total Fertility Rate (TFR)")
 
 tlb_train <- births_train |> filter(DataSeries == "Total Live-Births")
 tlb_test  <- births_test  |> filter(DataSeries == "Total Live-Births")
+
+#Fit one ARIMA model for TFR using the training period
+tfr_model <- tfr_train |>model(arima = ARIMA(value))
+
+#Summary
+report(tfr_model)
+glance(tfr_model)
+
+#Forecast for 2013-2024
+tfr_fc <- tfr_model |>forecast(new_data = tfr_test)
+
