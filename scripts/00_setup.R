@@ -2,6 +2,7 @@ required_packages <- c(
   "readr",
   "dplyr",
   "tidyr",
+  "tibble",
   "ggplot2",
   "tsibble",
   "fable",

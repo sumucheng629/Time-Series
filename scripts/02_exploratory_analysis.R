@@ -34,8 +34,8 @@ ggplot2::ggsave(
 )
 
 annual_changes <- birth_fertility_ts |>
-  dplyr::group_by_key() |>
-  dplyr::mutate(annual_change = difference(Observed)) |>
+  dplyr::group_by(Measure) |>
+  dplyr::mutate(annual_change = Observed - dplyr::lag(Observed)) |>
   dplyr::ungroup() |>
   dplyr::filter(!is.na(annual_change))
 

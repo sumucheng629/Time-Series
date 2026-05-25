@@ -1,22 +1,45 @@
 # Singapore Birth And Fertility Time Series
 
-This repository is a clean rebuild for an annual time series analysis of
-Singapore birth and fertility data. It uses the raw CSV in `data/raw/` and
-keeps all analysis code in `scripts/` so the work can be rerun from a fresh
-clone.
+This repository contains the working files for a time series assignment using
+annual Singapore birth and fertility data. The project is currently in an early
+analysis stage: the data workflow and modelling scripts have been set up, while
+the written report still needs the student's own interpretation and final model
+justification.
 
-The analysis focuses on two annual series:
+## Research Focus
+
+The project uses two annual series from the raw data file:
 
 - total fertility rate
 - total live births
 
-The scripts prepare the data, create exploratory plots, compare candidate
-forecasting models, and save diagnostic tables for the report and statistical
-appendix.
+A suitable final report should connect these series to a clear question about
+long-run demographic change and short-term forecasting. The current scripts are
+designed to support that question by producing exploratory plots, residual
+diagnostics, model comparison tables, and holdout forecast accuracy results.
 
-## Reproducibility
+## Current Stage
 
-Run the project from the repository root:
+Completed so far:
+
+- raw CSV placed under `data/raw/`
+- reproducible R workflow split across numbered scripts
+- output folders prepared for generated figures and tables
+- report and statistical appendix templates added
+- basic candidate models included for comparison
+
+Still to complete:
+
+- run the workflow in RStudio after installing the required packages
+- inspect the generated plots and tables
+- choose the final model for each series using diagnostics and forecast accuracy
+- write the report in the student's own words
+- move extra technical details into the statistical appendix
+
+## How To Run
+
+Open `Time-Series.Rproj` in RStudio, set the working directory to the project
+root if needed, then run:
 
 ```r
 source("scripts/run_project.R")
@@ -27,6 +50,7 @@ Required R packages:
 - readr
 - dplyr
 - tidyr
+- tibble
 - ggplot2
 - tsibble
 - fable
@@ -41,14 +65,28 @@ written to `outputs/tables/`.
 
 ```text
 data/raw/                  raw source data
+notes/                     project plan and work log
 outputs/figures/           generated plots
 outputs/tables/            generated model and diagnostic tables
+references/                data notes and source information
 report/                    report and appendix templates
 scripts/                   reproducible R workflow
 ```
 
+## Script Order
+
+```text
+scripts/00_setup.R                 package checks and shared helpers
+scripts/01_prepare_data.R          import, reshape, and save clean series
+scripts/02_exploratory_analysis.R  time plots, first differences, and ACFs
+scripts/03_model_comparison.R      candidate models and residual diagnostics
+scripts/04_forecast_assessment.R   holdout accuracy and future forecasts
+scripts/05_session_info.R          reproducibility metadata
+scripts/run_project.R              runs the full workflow
+```
+
 ## Report Drafting
 
-The files in `report/` are templates. They contain section prompts only; the
-student should add their own interpretation, model justification, and final
-discussion after running and checking the analysis.
+The files in `report/` are only templates. They should not be submitted as-is.
+After running the scripts, the student should use the generated evidence to
+write the analysis, explain model choices, and state the final conclusions.

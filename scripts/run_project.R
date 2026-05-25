@@ -3,5 +3,6 @@ source("scripts/01_prepare_data.R")
 source("scripts/02_exploratory_analysis.R")
 source("scripts/03_model_comparison.R")
 source("scripts/04_forecast_assessment.R")
+source("scripts/05_session_info.R")
 
 message("Workflow complete. Check outputs/figures and outputs/tables.")
