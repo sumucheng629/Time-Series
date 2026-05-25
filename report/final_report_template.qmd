@@ -1,0 +1,48 @@
+---
+title: "Singapore Birth And Fertility Time Series"
+format: html
+editor: visual
+---
+
+## Research Question
+
+Write a precise question that links the time series behaviour to the modelling
+task. State which series are analysed and why the question is suitable for
+annual time series methods.
+
+## Data
+
+Describe the source, time span, variables, units, and any cleaning decisions.
+Use `outputs/tables/series_summary.csv` to check the final analysis window.
+
+## Exploratory Analysis
+
+Discuss the main visual features of the two series. Refer to trend, turning
+points, persistence, changes in variability, and the first-difference plots.
+
+## Candidate Models
+
+Explain the benchmark, trend, ARIMA, and state-space candidates used in the R
+workflow. Link each model choice to the patterns seen in the exploratory plots
+and ACF diagnostics.
+
+## Model Diagnostics
+
+Summarise residual checks and Ljung-Box results. Identify where residual
+autocorrelation remains and what that means for model adequacy.
+
+## Forecast Evaluation
+
+Use the holdout accuracy table to compare models. Report the selected model for
+each series and justify the selection using both accuracy and diagnostics.
+
+## Final Forecasts
+
+Present the final forecasts and describe uncertainty bands. Interpret the
+forecasts carefully, noting any limitations caused by structural changes or the
+annual sample size.
+
+## Conclusion
+
+Answer the research question directly. Keep the conclusion tied to the evidence
+from the selected models and diagnostics.

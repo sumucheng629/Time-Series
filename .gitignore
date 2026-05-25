@@ -1,0 +1,17 @@
+.Rhistory
+.RData
+.Ruserdata
+.DS_Store
+Thumbs.db
+
+# Rendered reports and temporary Quarto outputs
+*.html
+*.pdf
+*_files/
+.quarto/
+
+# Keep generated analysis outputs optional.
+outputs/figures/*
+!outputs/figures/.gitkeep
+outputs/tables/*
+!outputs/tables/.gitkeep

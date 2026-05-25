@@ -1,0 +1,31 @@
+---
+title: "Statistical Appendix"
+format: html
+editor: visual
+---
+
+## Data Preparation Details
+
+Record the exact raw rows used, transformations applied, and final tsibble
+structure.
+
+## Additional Exploratory Plots
+
+Add plots that support the analysis but are too detailed for the main report.
+
+## Model Equations
+
+Write the equations for the main candidate models, including assumptions about
+innovations and differencing.
+
+## Model Selection Tables
+
+Include fit statistics, residual tests, and holdout forecast accuracy tables.
+
+## Models Not Selected
+
+Briefly explain why each viable but non-selected model was rejected.
+
+## Reproducibility Notes
+
+State the R version, package versions, and the command used to run the workflow.
