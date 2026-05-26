@@ -26,6 +26,7 @@ when the workflow is run.
 | File | Purpose |
 | --- | --- |
 | `series_summary.csv` | Basic coverage check for each selected series. |
+| `data_validation_checks.csv` | Pass/fail checks for expected measures, missing values, duplicate keys, consecutive years, and positive observations. |
 | `descriptive_features.csv` | First/latest values, minimums, maximums, and long-run changes. |
 | `annual_change_features.csv` | Largest annual increases/decreases and variability of annual changes. |
 | `series_association.csv` | Simple correlation between the two selected series. |

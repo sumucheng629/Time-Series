@@ -1,5 +1,6 @@
 source("scripts/00_setup.R")
 source("scripts/01_prepare_data.R")
+source("scripts/01_validate_data.R")
 source("scripts/02_descriptive_summary.R")
 source("scripts/02_exploratory_analysis.R")
 source("scripts/03_model_comparison.R")

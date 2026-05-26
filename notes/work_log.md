@@ -18,6 +18,8 @@
   outputs.
 - Added model candidate notes to keep the modelling plan separate from the
   final report.
+- Added a data validation script so the workflow checks the cleaned time series
+  before descriptive summaries and modelling.
 
 ## Next Commit Ideas
 
