@@ -10,6 +10,15 @@
 - Added data notes and a project plan to separate source documentation from the
   final report.
 
+## 2026-05-26
+
+- Added a descriptive summary script for long-run features, annual changes, and
+  association between the two selected series.
+- Added a data dictionary for the analysis-ready table and generated summary
+  outputs.
+- Added model candidate notes to keep the modelling plan separate from the
+  final report.
+
 ## Next Commit Ideas
 
 - Run the workflow in RStudio and commit generated tables/figures if required.
