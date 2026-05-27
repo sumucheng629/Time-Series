@@ -21,6 +21,12 @@
 - Added a data validation script so the workflow checks the cleaned time series
   before descriptive summaries and modelling.
 
+## 2026-05-27
+
+- Added a stationarity screening script that writes differenced series and
+  simple ACF1 summaries for levels, first differences, second differences, and
+  log differences.
+
 ## Next Commit Ideas
 
 - Run the workflow in RStudio and commit generated tables/figures if required.

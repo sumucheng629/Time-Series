@@ -27,6 +27,7 @@ Completed so far:
 - data notes and a data dictionary added under `references/`
 - data validation checks added before EDA and modelling
 - descriptive summary tables included in the workflow
+- stationarity screening tables added for differencing decisions
 - output folders prepared for generated figures and tables
 - report and statistical appendix templates added
 - basic candidate models included for comparison
@@ -83,6 +84,7 @@ scripts/00_setup.R                 package checks and shared helpers
 scripts/01_prepare_data.R          import, reshape, and save clean series
 scripts/01_validate_data.R         validation checks for the clean series
 scripts/02_descriptive_summary.R   summary features and annual change tables
+scripts/02_stationarity_checks.R   differencing data and ACF1 screening
 scripts/02_exploratory_analysis.R  time plots, first differences, and ACFs
 scripts/03_model_comparison.R      candidate models and residual diagnostics
 scripts/04_forecast_assessment.R   holdout accuracy and future forecasts

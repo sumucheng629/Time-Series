@@ -30,6 +30,8 @@ when the workflow is run.
 | `descriptive_features.csv` | First/latest values, minimums, maximums, and long-run changes. |
 | `annual_change_features.csv` | Largest annual increases/decreases and variability of annual changes. |
 | `series_association.csv` | Simple correlation between the two selected series. |
+| `differenced_series.csv` | Clean series with first differences, second differences, log values, and log differences. |
+| `stationarity_screen.csv` | Simple ACF1 and standard-deviation summaries to support differencing decisions. |
 
 These tables support report drafting, but they do not determine the final model
 choice by themselves.
