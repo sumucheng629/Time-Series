@@ -26,6 +26,8 @@
 - Added a stationarity screening script that writes differenced series and
   simple ACF1 summaries for levels, first differences, second differences, and
   log differences.
+- Added a report development checklist and output index to prepare for the next
+  writing stage without drafting final conclusions.
 
 ## Next Commit Ideas
 

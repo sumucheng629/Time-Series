@@ -28,6 +28,7 @@ Completed so far:
 - data validation checks added before EDA and modelling
 - descriptive summary tables included in the workflow
 - stationarity screening tables added for differencing decisions
+- report drafting checklist and output index added for the next writing stage
 - output folders prepared for generated figures and tables
 - report and statistical appendix templates added
 - basic candidate models included for comparison
