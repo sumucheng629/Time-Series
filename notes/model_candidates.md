@@ -35,6 +35,7 @@ but no seasonal pattern is expected.
 
 ## Selection Evidence To Use Later
 
+- candidate model registry
 - residual time plots
 - residual ACF plots
 - stationarity screening from levels and differenced series

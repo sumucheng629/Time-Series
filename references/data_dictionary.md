@@ -33,6 +33,7 @@ when the workflow is run.
 | `differenced_series.csv` | Clean series with first differences, second differences, log values, and log differences. |
 | `stationarity_screen.csv` | Simple ACF1 and standard-deviation summaries to support differencing decisions. |
 | `forecast_design.csv` | First year, last year, and observation count for the full, training, and holdout samples. |
+| `candidate_model_registry.csv` | Candidate model labels, specifications, classes, and intended comparison roles. |
 
 These tables support report drafting, but they do not determine the final model
 choice by themselves.

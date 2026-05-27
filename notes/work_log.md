@@ -30,6 +30,8 @@
   writing stage without drafting final conclusions.
 - Added a forecast design output table so the train/holdout split is explicit
   in the generated outputs.
+- Added a candidate model registry output so the comparison set is documented
+  before interpreting fit statistics.
 
 ## Next Commit Ideas
 

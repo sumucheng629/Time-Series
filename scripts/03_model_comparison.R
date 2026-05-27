@@ -32,6 +32,25 @@ forecast_design <- dplyr::bind_rows(
 ) |>
   dplyr::select(Measure, sample, first_year, last_year, observations)
 
+candidate_model_registry <- tibble::tibble(
+  model = c("naive", "drift", "linear_trend", "auto_arima", "ets"),
+  model_class = c("benchmark", "benchmark", "trend", "ARIMA", "state-space"),
+  specification = c(
+    "NAIVE(Observed)",
+    "RW(Observed ~ drift())",
+    "TSLM(Observed ~ trend())",
+    "ARIMA(Observed)",
+    "ETS(Observed)"
+  ),
+  purpose = c(
+    "Last-observation baseline for forecast comparison.",
+    "Random-walk benchmark with average historical drift.",
+    "Simple deterministic trend benchmark.",
+    "Course-based stochastic time series candidate.",
+    "Exponential smoothing state-space candidate."
+  )
+)
+
 candidate_fits <- analysis_train |>
   fabletools::model(
     naive = fable::NAIVE(Observed),
@@ -91,6 +110,11 @@ ggplot2::ggsave(
 readr::write_csv(
   forecast_design,
   project_path("outputs", "tables", "forecast_design.csv")
+)
+
+readr::write_csv(
+  candidate_model_registry,
+  project_path("outputs", "tables", "candidate_model_registry.csv")
 )
 
 readr::write_csv(

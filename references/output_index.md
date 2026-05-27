@@ -16,6 +16,7 @@ will be created after the workflow is run in RStudio.
 | `differenced_series.csv` | `02_stationarity_checks.R` | Appendix support for differencing. |
 | `stationarity_screen.csv` | `02_stationarity_checks.R` | Model selection support. |
 | `forecast_design.csv` | `03_model_comparison.R` | Explain the train/holdout split. |
+| `candidate_model_registry.csv` | `03_model_comparison.R` | Document candidate model roles. |
 | `candidate_model_fit_statistics.csv` | `03_model_comparison.R` | Model comparison. |
 | `candidate_model_terms.csv` | `03_model_comparison.R` | Appendix. |
 | `residual_ljung_box_tests.csv` | `03_model_comparison.R` | Diagnostics. |
