@@ -28,6 +28,8 @@
   log differences.
 - Added a report development checklist and output index to prepare for the next
   writing stage without drafting final conclusions.
+- Added a forecast design output table so the train/holdout split is explicit
+  in the generated outputs.
 
 ## Next Commit Ideas
 

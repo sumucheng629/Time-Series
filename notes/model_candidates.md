@@ -38,6 +38,7 @@ but no seasonal pattern is expected.
 - residual time plots
 - residual ACF plots
 - stationarity screening from levels and differenced series
+- documented training and holdout periods
 - Ljung-Box tests
 - AICc and other fit summaries
 - holdout RMSE, MAE, and MAPE

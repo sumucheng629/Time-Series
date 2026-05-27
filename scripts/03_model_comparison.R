@@ -2,14 +2,35 @@ if (!exists("birth_fertility_ts")) {
   source("scripts/01_prepare_data.R")
 }
 
+holdout_years <- 10L
 latest_year <- max(birth_fertility_ts$Year)
-holdout_start <- latest_year - 9L
+holdout_start <- latest_year - holdout_years + 1L
 
 analysis_train <- birth_fertility_ts |>
   dplyr::filter(Year < holdout_start)
 
 analysis_test <- birth_fertility_ts |>
   dplyr::filter(Year >= holdout_start)
+
+summarise_window <- function(data, sample_label) {
+  data |>
+    tibble::as_tibble() |>
+    dplyr::group_by(Measure) |>
+    dplyr::summarise(
+      sample = sample_label,
+      first_year = min(Year),
+      last_year = max(Year),
+      observations = dplyr::n(),
+      .groups = "drop"
+    )
+}
+
+forecast_design <- dplyr::bind_rows(
+  summarise_window(birth_fertility_ts, "full_series"),
+  summarise_window(analysis_train, "training"),
+  summarise_window(analysis_test, "holdout")
+) |>
+  dplyr::select(Measure, sample, first_year, last_year, observations)
 
 candidate_fits <- analysis_train |>
   fabletools::model(
@@ -65,6 +86,11 @@ ggplot2::ggsave(
   width = 11,
   height = 6.5,
   dpi = 320
+)
+
+readr::write_csv(
+  forecast_design,
+  project_path("outputs", "tables", "forecast_design.csv")
 )
 
 readr::write_csv(

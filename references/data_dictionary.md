@@ -32,6 +32,7 @@ when the workflow is run.
 | `series_association.csv` | Simple correlation between the two selected series. |
 | `differenced_series.csv` | Clean series with first differences, second differences, log values, and log differences. |
 | `stationarity_screen.csv` | Simple ACF1 and standard-deviation summaries to support differencing decisions. |
+| `forecast_design.csv` | First year, last year, and observation count for the full, training, and holdout samples. |
 
 These tables support report drafting, but they do not determine the final model
 choice by themselves.
