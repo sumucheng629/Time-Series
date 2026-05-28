@@ -22,6 +22,7 @@ will be created after the workflow is run in RStudio.
 | `residual_ljung_box_tests.csv` | `03_model_comparison.R` | Diagnostics. |
 | `holdout_forecast_accuracy.csv` | `04_forecast_assessment.R` | Final model selection evidence. |
 | `best_holdout_models.csv` | `04_forecast_assessment.R` | Drafting aid, not the only selection rule. |
+| `model_selection_evidence.csv` | `04_selection_evidence.R` | Combined review table for model choice. |
 | `session_info.txt` | `05_session_info.R` | Reproducibility note. |
 
 ## Figures

@@ -34,6 +34,7 @@ interpretation.
 - `outputs/tables/candidate_model_fit_statistics.csv`
 - `outputs/tables/residual_ljung_box_tests.csv`
 - `outputs/tables/holdout_forecast_accuracy.csv`
+- `outputs/tables/model_selection_evidence.csv`
 - figures in `outputs/figures/`
 
 ## Writing Rules

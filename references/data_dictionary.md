@@ -34,6 +34,7 @@ when the workflow is run.
 | `stationarity_screen.csv` | Simple ACF1 and standard-deviation summaries to support differencing decisions. |
 | `forecast_design.csv` | First year, last year, and observation count for the full, training, and holdout samples. |
 | `candidate_model_registry.csv` | Candidate model labels, specifications, classes, and intended comparison roles. |
+| `model_selection_evidence.csv` | Combined accuracy, fit, residual, and review-rank evidence for later manual model selection. |
 
 These tables support report drafting, but they do not determine the final model
 choice by themselves.

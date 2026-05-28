@@ -30,6 +30,7 @@ Completed so far:
 - stationarity screening tables added for differencing decisions
 - forecast evaluation design table added for the holdout split
 - candidate model registry added for transparent model comparison
+- model selection evidence table added for later manual review
 - report drafting checklist and output index added for the next writing stage
 - output folders prepared for generated figures and tables
 - report and statistical appendix templates added
@@ -91,6 +92,7 @@ scripts/02_stationarity_checks.R   differencing data and ACF1 screening
 scripts/02_exploratory_analysis.R  time plots, first differences, and ACFs
 scripts/03_model_comparison.R      candidate models and residual diagnostics
 scripts/04_forecast_assessment.R   holdout accuracy and future forecasts
+scripts/04_selection_evidence.R    combined evidence table for model review
 scripts/05_session_info.R          reproducibility metadata
 scripts/run_project.R              runs the full workflow
 ```

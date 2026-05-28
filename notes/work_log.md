@@ -32,6 +32,8 @@
   in the generated outputs.
 - Added a candidate model registry output so the comparison set is documented
   before interpreting fit statistics.
+- Added a model selection evidence output that combines forecast accuracy,
+  residual checks, model registry labels, and fit statistics for later review.
 
 ## Next Commit Ideas
 
