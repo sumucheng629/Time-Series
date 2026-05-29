@@ -35,6 +35,11 @@
 - Added a model selection evidence output that combines forecast accuracy,
   residual checks, model registry labels, and fit statistics for later review.
 
+## 2026-05-29
+
+- Added transformation screening outputs to compare original-scale and log-scale
+  behaviour before finalising modelling choices.
+
 ## Next Commit Ideas
 
 - Run the workflow in RStudio and commit generated tables/figures if required.

@@ -13,6 +13,9 @@ will be created after the workflow is run in RStudio.
 | `descriptive_features.csv` | `02_descriptive_summary.R` | EDA summary. |
 | `annual_change_features.csv` | `02_descriptive_summary.R` | EDA summary or appendix. |
 | `series_association.csv` | `02_descriptive_summary.R` | Optional context only. |
+| `transformation_series.csv` | `02_transformation_checks.R` | Appendix support for scale decisions. |
+| `transformation_screen.csv` | `02_transformation_checks.R` | Transformation discussion. |
+| `transformation_recommendation_inputs.csv` | `02_transformation_checks.R` | Drafting aid for scale choice. |
 | `differenced_series.csv` | `02_stationarity_checks.R` | Appendix support for differencing. |
 | `stationarity_screen.csv` | `02_stationarity_checks.R` | Model selection support. |
 | `forecast_design.csv` | `03_model_comparison.R` | Explain the train/holdout split. |
@@ -33,6 +36,7 @@ will be created after the workflow is run in RStudio.
 | `level_acf.png` | `02_exploratory_analysis.R` | Appendix or modelling motivation. |
 | `annual_first_differences.png` | `02_exploratory_analysis.R` | Main report or appendix. |
 | `first_difference_acf.png` | `02_exploratory_analysis.R` | Appendix or differencing discussion. |
+| `scale_comparison.png` | `02_transformation_checks.R` | Transformation discussion. |
 | `candidate_model_residuals.png` | `03_model_comparison.R` | Diagnostics. |
 | `candidate_residual_acf.png` | `03_model_comparison.R` | Diagnostics or appendix. |
 | `holdout_forecast_comparison.png` | `04_forecast_assessment.R` | Forecast evaluation. |

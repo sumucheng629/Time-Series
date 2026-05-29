@@ -30,6 +30,7 @@ interpretation.
 
 - `outputs/tables/data_validation_checks.csv`
 - `outputs/tables/descriptive_features.csv`
+- `outputs/tables/transformation_screen.csv`
 - `outputs/tables/stationarity_screen.csv`
 - `outputs/tables/candidate_model_fit_statistics.csv`
 - `outputs/tables/residual_ljung_box_tests.csv`

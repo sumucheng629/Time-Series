@@ -27,6 +27,7 @@ Completed so far:
 - data notes and a data dictionary added under `references/`
 - data validation checks added before EDA and modelling
 - descriptive summary tables included in the workflow
+- transformation screening added for scale and log-scale decisions
 - stationarity screening tables added for differencing decisions
 - forecast evaluation design table added for the holdout split
 - candidate model registry added for transparent model comparison
@@ -88,6 +89,7 @@ scripts/00_setup.R                 package checks and shared helpers
 scripts/01_prepare_data.R          import, reshape, and save clean series
 scripts/01_validate_data.R         validation checks for the clean series
 scripts/02_descriptive_summary.R   summary features and annual change tables
+scripts/02_transformation_checks.R scale and log-scale screening
 scripts/02_stationarity_checks.R   differencing data and ACF1 screening
 scripts/02_exploratory_analysis.R  time plots, first differences, and ACFs
 scripts/03_model_comparison.R      candidate models and residual diagnostics

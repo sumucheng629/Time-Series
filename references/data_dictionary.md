@@ -30,6 +30,9 @@ when the workflow is run.
 | `descriptive_features.csv` | First/latest values, minimums, maximums, and long-run changes. |
 | `annual_change_features.csv` | Largest annual increases/decreases and variability of annual changes. |
 | `series_association.csv` | Simple correlation between the two selected series. |
+| `transformation_series.csv` | Clean series with log values and standardised original/log-scale values. |
+| `transformation_screen.csv` | Early/middle/recent variation summaries for scale assessment. |
+| `transformation_recommendation_inputs.csv` | Simple inputs for deciding whether log scale should be considered. |
 | `differenced_series.csv` | Clean series with first differences, second differences, log values, and log differences. |
 | `stationarity_screen.csv` | Simple ACF1 and standard-deviation summaries to support differencing decisions. |
 | `forecast_design.csv` | First year, last year, and observation count for the full, training, and holdout samples. |

@@ -38,6 +38,7 @@ but no seasonal pattern is expected.
 - candidate model registry
 - residual time plots
 - residual ACF plots
+- transformation screening for original scale versus log scale
 - stationarity screening from levels and differenced series
 - documented training and holdout periods
 - Ljung-Box tests
