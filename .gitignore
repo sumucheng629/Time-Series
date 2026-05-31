@@ -10,8 +10,4 @@ Thumbs.db
 *_files/
 .quarto/
 
-# Keep generated analysis outputs optional.
-outputs/figures/*
-!outputs/figures/.gitkeep
-outputs/tables/*
-!outputs/tables/.gitkeep
+# Generated analysis outputs are committed after the workflow is run.

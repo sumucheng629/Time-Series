@@ -1,0 +1,11 @@
+"Measure",".model","lb_stat","lb_pvalue"
+"Total fertility rate","auto_arima",11.1487084833094,0.346050275082031
+"Total fertility rate","drift",44.5182807969108,2.65593795467645e-06
+"Total fertility rate","ets",6.88352848462699,0.736392934512083
+"Total fertility rate","linear_trend",177.473074381019,0
+"Total fertility rate","naive",44.5182807969109,2.65593795467645e-06
+"Total live births","auto_arima",7.64524351952018,0.663444348618786
+"Total live births","drift",7.58540592597593,0.669261567780964
+"Total live births","ets",6.54602732812859,0.767494424631879
+"Total live births","linear_trend",109.597251372401,0
+"Total live births","naive",7.58540592597593,0.669261567780964

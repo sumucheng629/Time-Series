@@ -1,0 +1,3 @@
+"Measure","first_year","last_year","observations","start_value","latest_value","minimum_value","minimum_year","maximum_value","maximum_year","mean_value","sd_value","net_change","average_annual_change"
+"Total fertility rate",1960,2025,66,5.76,0.87,0.87,2025,5.76,1960,2.045,1.23390094353702,-4.89,-0.0752307692307692
+"Total live births",1960,2025,66,61775,30004,30004,2025,61775,1960,44142.1212121212,6812.31578272346,-31771,-488.784615384615

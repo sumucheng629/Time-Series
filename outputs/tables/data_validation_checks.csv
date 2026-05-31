@@ -1,0 +1,7 @@
+"check","passed","detail"
+"expected_measures_present",TRUE,"Total fertility rate; Total live births"
+"no_missing_values",TRUE,"0 missing observations"
+"no_duplicate_measure_year_keys",TRUE,"0 duplicate keys"
+"annual_years_are_consecutive",TRUE,"0 series with non-consecutive years"
+"positive_observations",TRUE,"0 non-positive observations"
+"minimum_history_length",TRUE,"minimum observations per measure: 66"

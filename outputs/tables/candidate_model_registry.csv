@@ -1,0 +1,6 @@
+"model","model_class","specification","purpose"
+"naive","benchmark","NAIVE(Observed)","Last-observation baseline for forecast comparison."
+"drift","benchmark","RW(Observed ~ drift())","Random-walk benchmark with average historical drift."
+"linear_trend","trend","TSLM(Observed ~ trend())","Simple deterministic trend benchmark."
+"auto_arima","ARIMA","ARIMA(Observed)","Course-based stochastic time series candidate."
+"ets","state-space","ETS(Observed)","Exponential smoothing state-space candidate."

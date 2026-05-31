@@ -1,0 +1,3 @@
+"Measure","all_positive","period_cv_range","log_sd_range","log_scale_is_available","transformation_note"
+"Total fertility rate",TRUE,0.309867550437186,0.317313596742132,TRUE,"Original scale and log scale can both be inspected; choose using diagnostics."
+"Total live births",TRUE,0.0781590082128743,0.0717138641253903,TRUE,"Log scale is available for this count series; compare diagnostics before finalising."

@@ -1,0 +1,7 @@
+"Measure","sample","first_year","last_year","observations"
+"Total fertility rate","full_series",1960,2025,66
+"Total live births","full_series",1960,2025,66
+"Total fertility rate","training",1960,2015,56
+"Total live births","training",1960,2015,56
+"Total fertility rate","holdout",2016,2025,10
+"Total live births","holdout",2016,2025,10

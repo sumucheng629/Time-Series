@@ -1,0 +1,15 @@
+"Measure",".model","term","estimate","std.error","statistic","p.value"
+"Total fertility rate","drift","b",-0.0821818181818182,0.0212547335335421,-3.86651839469674,0.000298736587043914
+"Total fertility rate","linear_trend","(Intercept)",4.0561948051948,0.191130049150544,21.2221721452075,7.20364898016688e-28
+"Total fertility rate","linear_trend","trend()",-0.0644654818865345,0.00583348314128486,-11.0509416630174,1.76787696816094e-15
+"Total fertility rate","auto_arima","ma1",-0.799257779415826,0.0746695215528685,-10.7039359941516,5.8246403797321e-15
+"Total fertility rate","ets","alpha",0.992636647023223,,,
+"Total fertility rate","ets","beta",0.00010001734289268,,,
+"Total fertility rate","ets","phi",0.900711513586567,,,
+"Total fertility rate","ets","l[0]",6.19882165815201,,,
+"Total fertility rate","ets","b[0]",-0.510731327875252,,,
+"Total live births","drift","b",-356.181818181818,370.585015797013,-0.961133891006851,0.340768974392846
+"Total live births","linear_trend","(Intercept)",52541.5733766234,1369.00611781151,38.3793561570172,7.11929086378196e-41
+"Total live births","linear_trend","trend()",-249.528263841422,41.7834565734822,-5.9719392387413,1.89146937995597e-07
+"Total live births","ets","alpha",0.889751835949459,,,
+"Total live births","ets","l[0]",61569.866306195,,,
