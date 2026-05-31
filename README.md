@@ -103,3 +103,6 @@ scripts/run_project.R              runs the full workflow
 The files in `report/` are only templates. They should not be submitted as-is.
 After running the scripts, the student should use the generated evidence to
 write the analysis, explain model choices, and state the final conclusions.
+
+The latest successful workflow run is documented in
+`notes/run_2026-05-31.md`.

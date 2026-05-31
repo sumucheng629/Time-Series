@@ -40,6 +40,13 @@
 - Added transformation screening outputs to compare original-scale and log-scale
   behaviour before finalising modelling choices.
 
+## 2026-05-31
+
+- Ran the full R workflow successfully using an ASCII working path and package
+  library path.
+- Committed generated analysis tables and figures.
+- Added a reproducibility note for the successful run.
+
 ## Next Commit Ideas
 
 - Run the workflow in RStudio and commit generated tables/figures if required.
