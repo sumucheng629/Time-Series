@@ -46,9 +46,9 @@ validation_checks <- tibble::tibble(
   )
 )
 
-readr::write_csv(
+write_output_csv(
   validation_checks,
-  project_path("outputs", "tables", "data_validation_checks.csv")
+  "outputs", "tables", "data_validation_checks.csv"
 )
 
 if (any(!validation_checks$passed)) {

@@ -1,5 +1,4 @@
 required_packages <- c(
-  "readr",
   "dplyr",
   "tidyr",
   "tibble",
@@ -26,11 +25,36 @@ if (length(missing_packages) > 0) {
 invisible(lapply(required_packages, library, character.only = TRUE))
 
 project_path <- function(...) {
-  file.path(getwd(), ...)
+  file.path(...)
 }
 
 ensure_output_dir <- function(...) {
   dir.create(project_path(...), recursive = TRUE, showWarnings = FALSE)
+}
+
+write_output_csv <- function(x, ...) {
+  x <- as.data.frame(x)
+  x[] <- lapply(x, function(column) {
+    if (!is.list(column)) {
+      return(column)
+    }
+
+    vapply(
+      column,
+      function(value) paste(utils::capture.output(str(value, give.attr = FALSE)), collapse = " "),
+      character(1)
+    )
+  })
+
+  utils::write.csv(x, project_path(...), row.names = FALSE, na = "")
+}
+
+write_output_lines <- function(x, ...) {
+  writeLines(x, project_path(...), useBytes = TRUE)
+}
+
+parse_numeric_value <- function(x) {
+  as.numeric(gsub(",", "", as.character(x)))
 }
 
 ensure_output_dir("outputs", "figures")

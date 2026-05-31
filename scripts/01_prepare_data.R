@@ -4,9 +4,10 @@ if (!exists("project_path")) {
 
 target_rows <- c("Total Fertility Rate (TFR)", "Total Live-Births")
 
-birth_fertility_raw <- readr::read_csv(
+birth_fertility_raw <- utils::read.csv(
   project_path("data", "raw", "BirthsAndFertilityRatesAnnual.csv"),
-  show_col_types = FALSE
+  check.names = FALSE,
+  stringsAsFactors = FALSE
 )
 
 birth_fertility_ts <- birth_fertility_raw |>
@@ -15,11 +16,12 @@ birth_fertility_ts <- birth_fertility_raw |>
   tidyr::pivot_longer(
     cols = -DataSeries,
     names_to = "Year",
-    values_to = "Observed"
+    values_to = "Observed",
+    values_transform = list(Observed = as.character)
   ) |>
   dplyr::mutate(
     Year = as.integer(Year),
-    Observed = readr::parse_number(as.character(Observed)),
+    Observed = parse_numeric_value(Observed),
     Measure = dplyr::case_when(
       DataSeries == "Total Fertility Rate (TFR)" ~ "Total fertility rate",
       DataSeries == "Total Live-Births" ~ "Total live births",
@@ -43,12 +45,12 @@ series_summary <- birth_fertility_ts |>
     .groups = "drop"
   )
 
-readr::write_csv(
+write_output_csv(
   tibble::as_tibble(birth_fertility_ts),
-  project_path("outputs", "tables", "clean_birth_fertility_series.csv")
+  "outputs", "tables", "clean_birth_fertility_series.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   series_summary,
-  project_path("outputs", "tables", "series_summary.csv")
+  "outputs", "tables", "series_summary.csv"
 )

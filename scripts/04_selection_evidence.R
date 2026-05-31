@@ -64,7 +64,7 @@ model_selection_evidence <- forecast_accuracy |>
   dplyr::ungroup() |>
   dplyr::arrange(Measure, rmse_rank, mae_rank)
 
-readr::write_csv(
+write_output_csv(
   model_selection_evidence,
-  project_path("outputs", "tables", "model_selection_evidence.csv")
+  "outputs", "tables", "model_selection_evidence.csv"
 )

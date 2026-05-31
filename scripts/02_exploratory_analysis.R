@@ -72,7 +72,7 @@ ggplot2::ggsave(
   dpi = 320
 )
 
-readr::write_csv(
+write_output_csv(
   tibble::as_tibble(annual_changes),
-  project_path("outputs", "tables", "annual_first_differences.csv")
+  "outputs", "tables", "annual_first_differences.csv"
 )

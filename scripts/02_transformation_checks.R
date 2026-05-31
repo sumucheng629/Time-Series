@@ -84,17 +84,17 @@ ggplot2::ggsave(
   dpi = 320
 )
 
-readr::write_csv(
+write_output_csv(
   transformation_series,
-  project_path("outputs", "tables", "transformation_series.csv")
+  "outputs", "tables", "transformation_series.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   transformation_screen,
-  project_path("outputs", "tables", "transformation_screen.csv")
+  "outputs", "tables", "transformation_screen.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   transformation_recommendation_inputs,
-  project_path("outputs", "tables", "transformation_recommendation_inputs.csv")
+  "outputs", "tables", "transformation_recommendation_inputs.csv"
 )

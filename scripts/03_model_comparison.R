@@ -72,7 +72,7 @@ model_terms <- tryCatch(
 model_residuals <- fabletools::augment(candidate_fits)
 
 residual_ljung_box <- model_residuals |>
-  feasts::features(.innov, feasts::ljung_box, lag = 10, dof = 0)
+  features(.innov, feasts::ljung_box, lag = 10, dof = 0)
 
 residual_time_plot <- model_residuals |>
   ggplot2::ggplot(ggplot2::aes(x = Year, y = .innov)) +
@@ -107,27 +107,27 @@ ggplot2::ggsave(
   dpi = 320
 )
 
-readr::write_csv(
+write_output_csv(
   forecast_design,
-  project_path("outputs", "tables", "forecast_design.csv")
+  "outputs", "tables", "forecast_design.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   candidate_model_registry,
-  project_path("outputs", "tables", "candidate_model_registry.csv")
+  "outputs", "tables", "candidate_model_registry.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   fit_statistics,
-  project_path("outputs", "tables", "candidate_model_fit_statistics.csv")
+  "outputs", "tables", "candidate_model_fit_statistics.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   model_terms,
-  project_path("outputs", "tables", "candidate_model_terms.csv")
+  "outputs", "tables", "candidate_model_terms.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   residual_ljung_box,
-  project_path("outputs", "tables", "residual_ljung_box_tests.csv")
+  "outputs", "tables", "residual_ljung_box_tests.csv"
 )

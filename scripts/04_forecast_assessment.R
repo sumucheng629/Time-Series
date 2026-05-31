@@ -60,12 +60,12 @@ ggplot2::ggsave(
   dpi = 320
 )
 
-readr::write_csv(
+write_output_csv(
   forecast_accuracy,
-  project_path("outputs", "tables", "holdout_forecast_accuracy.csv")
+  "outputs", "tables", "holdout_forecast_accuracy.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   best_holdout_models,
-  project_path("outputs", "tables", "best_holdout_models.csv")
+  "outputs", "tables", "best_holdout_models.csv"
 )

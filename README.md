@@ -56,7 +56,6 @@ source("scripts/run_project.R")
 
 Required R packages:
 
-- readr
 - dplyr
 - tidyr
 - tibble

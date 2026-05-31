@@ -4,7 +4,7 @@ if (!exists("project_path")) {
 
 session_lines <- capture.output(sessionInfo())
 
-readr::write_lines(
+write_output_lines(
   session_lines,
-  project_path("outputs", "tables", "session_info.txt")
+  "outputs", "tables", "session_info.txt"
 )

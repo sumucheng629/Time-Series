@@ -56,17 +56,17 @@ series_association <- tibble::tibble(
   )
 )
 
-readr::write_csv(
+write_output_csv(
   descriptive_features,
-  project_path("outputs", "tables", "descriptive_features.csv")
+  "outputs", "tables", "descriptive_features.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   annual_change_features,
-  project_path("outputs", "tables", "annual_change_features.csv")
+  "outputs", "tables", "annual_change_features.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   series_association,
-  project_path("outputs", "tables", "series_association.csv")
+  "outputs", "tables", "series_association.csv"
 )

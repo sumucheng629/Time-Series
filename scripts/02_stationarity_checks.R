@@ -37,12 +37,12 @@ stationarity_screen <- differenced_series |>
     .groups = "drop"
   )
 
-readr::write_csv(
+write_output_csv(
   differenced_series,
-  project_path("outputs", "tables", "differenced_series.csv")
+  "outputs", "tables", "differenced_series.csv"
 )
 
-readr::write_csv(
+write_output_csv(
   stationarity_screen,
-  project_path("outputs", "tables", "stationarity_screen.csv")
+  "outputs", "tables", "stationarity_screen.csv"
 )
