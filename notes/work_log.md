@@ -53,6 +53,8 @@
   configured R executable, package library path, and temporary directory.
 - Added an output manifest step to index generated tables and figures after the
   workflow runs.
+- Added a results review note to summarise what should be inspected before
+  drafting the final model discussion.
 
 ## Next Commit Ideas
 

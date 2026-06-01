@@ -36,6 +36,7 @@ interpretation.
 - `outputs/tables/residual_ljung_box_tests.csv`
 - `outputs/tables/holdout_forecast_accuracy.csv`
 - `outputs/tables/model_selection_evidence.csv`
+- `outputs/tables/output_manifest.csv`
 - figures in `outputs/figures/`
 
 ## Writing Rules
@@ -45,3 +46,5 @@ interpretation.
 - Do not claim a model is adequate unless residual checks support that claim.
 - Do not choose the final model using one metric only.
 - Keep exploratory comments separate from final model conclusions.
+- Use `notes/results_review_2026-06-01.md` as a planning aid, not as final
+  report prose.
