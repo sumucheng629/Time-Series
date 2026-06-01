@@ -100,6 +100,7 @@ scripts/02_exploratory_analysis.R  time plots, first differences, and ACFs
 scripts/03_model_comparison.R      candidate models and residual diagnostics
 scripts/04_forecast_assessment.R   holdout accuracy and future forecasts
 scripts/04_selection_evidence.R    combined evidence table for model review
+scripts/05_output_manifest.R       generated output file index
 scripts/05_session_info.R          reproducibility metadata
 scripts/run_project.R              runs the full workflow
 scripts/run_windows_workflow.ps1   PowerShell helper for this Windows setup

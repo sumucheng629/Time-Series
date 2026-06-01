@@ -51,6 +51,8 @@
 
 - Added a Windows PowerShell helper script for rerunning the R workflow with the
   configured R executable, package library path, and temporary directory.
+- Added an output manifest step to index generated tables and figures after the
+  workflow runs.
 
 ## Next Commit Ideas
 
