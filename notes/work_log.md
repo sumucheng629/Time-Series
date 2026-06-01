@@ -47,6 +47,11 @@
 - Committed generated analysis tables and figures.
 - Added a reproducibility note for the successful run.
 
+## 2026-06-01
+
+- Added a Windows PowerShell helper script for rerunning the R workflow with the
+  configured R executable, package library path, and temporary directory.
+
 ## Next Commit Ideas
 
 - Run the workflow in RStudio and commit generated tables/figures if required.

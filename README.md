@@ -54,6 +54,12 @@ root if needed, then run:
 source("scripts/run_project.R")
 ```
 
+On this Windows machine, the workflow can also be run from PowerShell:
+
+```powershell
+.\scripts\run_windows_workflow.ps1
+```
+
 Required R packages:
 
 - dplyr
@@ -96,6 +102,7 @@ scripts/04_forecast_assessment.R   holdout accuracy and future forecasts
 scripts/04_selection_evidence.R    combined evidence table for model review
 scripts/05_session_info.R          reproducibility metadata
 scripts/run_project.R              runs the full workflow
+scripts/run_windows_workflow.ps1   PowerShell helper for this Windows setup
 ```
 
 ## Report Drafting
