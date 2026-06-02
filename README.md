@@ -115,3 +115,5 @@ write the analysis, explain model choices, and state the final conclusions.
 
 The latest successful workflow run is documented in
 `notes/run_2026-05-31.md`.
+
+The report drafting evidence map is in `report/report_drafting_map.md`.

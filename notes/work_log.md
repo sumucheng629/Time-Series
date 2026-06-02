@@ -62,6 +62,8 @@
   tables or figures are missing or empty.
 - Added a figure review checklist to plan which generated plots should support
   the main report versus the statistical appendix.
+- Added a report drafting map that links planned sections to generated evidence
+  without writing final report prose.
 
 ## Next Commit Ideas
 
