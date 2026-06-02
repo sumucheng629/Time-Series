@@ -56,6 +56,11 @@
 - Added a results review note to summarise what should be inspected before
   drafting the final model discussion.
 
+## 2026-06-02
+
+- Added required-output quality checks so the workflow fails if key generated
+  tables or figures are missing or empty.
+
 ## Next Commit Ideas
 
 - Run the workflow in RStudio and commit generated tables/figures if required.

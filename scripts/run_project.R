@@ -9,6 +9,7 @@ source("scripts/03_model_comparison.R")
 source("scripts/04_forecast_assessment.R")
 source("scripts/04_selection_evidence.R")
 source("scripts/05_output_manifest.R")
+source("scripts/05_output_quality_checks.R")
 source("scripts/05_session_info.R")
 
 message("Workflow complete. Check outputs/figures and outputs/tables.")

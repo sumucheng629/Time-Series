@@ -27,6 +27,7 @@ will be created after the workflow is run in RStudio.
 | `best_holdout_models.csv` | `04_forecast_assessment.R` | Drafting aid, not the only selection rule. |
 | `model_selection_evidence.csv` | `04_selection_evidence.R` | Combined review table for model choice. |
 | `output_manifest.csv` | `05_output_manifest.R` | File index for generated outputs. |
+| `output_quality_checks.csv` | `05_output_quality_checks.R` | Required output presence checks. |
 | `session_info.txt` | `05_session_info.R` | Reproducibility note. |
 
 ## Figures
