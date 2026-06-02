@@ -38,6 +38,7 @@ interpretation.
 - `outputs/tables/model_selection_evidence.csv`
 - `outputs/tables/output_manifest.csv`
 - figures in `outputs/figures/`
+- `notes/figure_review_checklist_2026-06-02.md`
 
 ## Writing Rules
 
@@ -48,3 +49,5 @@ interpretation.
 - Keep exploratory comments separate from final model conclusions.
 - Use `notes/results_review_2026-06-01.md` as a planning aid, not as final
   report prose.
+- Use `notes/figure_review_checklist_2026-06-02.md` to decide which figures
+  belong in the main report and which belong in the appendix.

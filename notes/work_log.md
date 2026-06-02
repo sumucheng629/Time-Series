@@ -60,6 +60,8 @@
 
 - Added required-output quality checks so the workflow fails if key generated
   tables or figures are missing or empty.
+- Added a figure review checklist to plan which generated plots should support
+  the main report versus the statistical appendix.
 
 ## Next Commit Ideas
 
