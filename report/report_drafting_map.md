@@ -33,3 +33,5 @@ the workflow. It is a planning document, not a completed report.
 - Do not hide residual diagnostics that contradict a simple model choice.
 - Keep extra tables in the appendix unless they directly support the main
   argument.
+- Use `notes/table_review_checklist_2026-06-03.md` to decide which table
+  evidence belongs in the main text and which belongs in the appendix.

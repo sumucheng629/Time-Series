@@ -39,6 +39,7 @@ interpretation.
 - `outputs/tables/output_manifest.csv`
 - figures in `outputs/figures/`
 - `notes/figure_review_checklist_2026-06-02.md`
+- `notes/table_review_checklist_2026-06-03.md`
 
 ## Writing Rules
 
@@ -51,3 +52,5 @@ interpretation.
   report prose.
 - Use `notes/figure_review_checklist_2026-06-02.md` to decide which figures
   belong in the main report and which belong in the appendix.
+- Use `notes/table_review_checklist_2026-06-03.md` to avoid overclaiming from
+  table outputs.

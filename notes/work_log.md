@@ -65,6 +65,11 @@
 - Added a report drafting map that links planned sections to generated evidence
   without writing final report prose.
 
+## 2026-06-03
+
+- Added a table review checklist to guide how generated CSV outputs should be
+  used during report drafting.
+
 ## Next Commit Ideas
 
 - Run the workflow in RStudio and commit generated tables/figures if required.
