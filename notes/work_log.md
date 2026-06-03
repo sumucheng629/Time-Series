@@ -70,6 +70,11 @@
 - Added a table review checklist to guide how generated CSV outputs should be
   used during report drafting.
 
+## 2026-06-04
+
+- Added a report input summary output to combine validation status, output
+  quality status, holdout window, and top accuracy models for drafting review.
+
 ## Next Commit Ideas
 
 - Run the workflow in RStudio and commit generated tables/figures if required.

@@ -28,6 +28,7 @@ will be created after the workflow is run in RStudio.
 | `model_selection_evidence.csv` | `04_selection_evidence.R` | Combined review table for model choice. |
 | `output_manifest.csv` | `05_output_manifest.R` | File index for generated outputs. |
 | `output_quality_checks.csv` | `05_output_quality_checks.R` | Required output presence checks. |
+| `report_input_summary.csv` | `05_report_input_summary.R` | Compact planning summary for report drafting. |
 | `session_info.txt` | `05_session_info.R` | Reproducibility note. |
 
 ## Figures

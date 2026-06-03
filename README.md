@@ -102,6 +102,7 @@ scripts/04_forecast_assessment.R   holdout accuracy and future forecasts
 scripts/04_selection_evidence.R    combined evidence table for model review
 scripts/05_output_manifest.R       generated output file index
 scripts/05_output_quality_checks.R required output presence checks
+scripts/05_report_input_summary.R  report drafting input summary
 scripts/05_session_info.R          reproducibility metadata
 scripts/run_project.R              runs the full workflow
 scripts/run_windows_workflow.ps1   PowerShell helper for this Windows setup

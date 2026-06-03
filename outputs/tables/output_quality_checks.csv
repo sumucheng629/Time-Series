@@ -3,7 +3,7 @@
 "outputs/tables/forecast_design.csv",TRUE,343,TRUE,TRUE
 "outputs/tables/holdout_forecast_accuracy.csv",TRUE,1443,TRUE,TRUE
 "outputs/tables/model_selection_evidence.csv",TRUE,3343,TRUE,TRUE
-"outputs/tables/output_manifest.csv",TRUE,2731,TRUE,TRUE
+"outputs/tables/output_manifest.csv",TRUE,2815,TRUE,TRUE
 "outputs/figures/annual_series_overview.png",TRUE,49978,TRUE,TRUE
 "outputs/figures/candidate_residual_acf.png",TRUE,81370,TRUE,TRUE
 "outputs/figures/holdout_forecast_comparison.png",TRUE,60074,TRUE,TRUE

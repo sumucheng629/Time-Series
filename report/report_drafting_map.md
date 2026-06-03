@@ -21,6 +21,7 @@ the workflow. It is a planning document, not a completed report.
 | --- | --- |
 | Full output index | `outputs/tables/output_manifest.csv` |
 | Output quality checks | `outputs/tables/output_quality_checks.csv` |
+| Report input summary | `outputs/tables/report_input_summary.csv` |
 | Additional ACF plots | `level_acf.png`, `first_difference_acf.png` |
 | Candidate model terms | `candidate_model_terms.csv` |
 | Residual tests | `residual_ljung_box_tests.csv` |

@@ -1,0 +1,6 @@
+"item","status"
+"data_validation","all_validation_checks_passed"
+"required_outputs","required_outputs_present"
+"holdout_window","2016-2025"
+"top_accuracy_models","Total fertility rate: auto_arima: accuracy_and_residuals | Total live births: linear_trend: accuracy_only"
+"drafting_warning","use_as_planning_input_not_final_prose"
