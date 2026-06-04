@@ -30,6 +30,8 @@ will be created after the workflow is run in RStudio.
 | `output_quality_checks.csv` | `05_output_quality_checks.R` | Required output presence checks. |
 | `report_input_summary.csv` | `05_report_input_summary.R` | Compact planning summary for report drafting. |
 | `session_info.txt` | `05_session_info.R` | Reproducibility note. |
+| `submission_readiness_checks.csv` | `06_submission_readiness.R` | Final file-level readiness checklist. |
+| `submission_readiness_summary.csv` | `06_submission_readiness.R` | Compact summary of readiness statuses. |
 
 ## Figures
 

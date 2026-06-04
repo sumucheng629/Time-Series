@@ -81,8 +81,9 @@
   tables and figures while leaving the final interpretation for the student.
 - Added a statistical appendix workbook to organise technical model details,
   diagnostics, forecast evaluation evidence, and reproducibility checks.
+- Added submission readiness checks to verify that core workflow files,
+  generated evidence, report workbooks, notes, and references are present.
 
 ## Next Commit Ideas
 
-- Add final submission readiness checks to the R workflow.
 - Record the remaining student-owned finalisation tasks.

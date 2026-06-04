@@ -38,6 +38,7 @@ Completed so far:
 - report workbook added to connect generated evidence to final writing sections
 - statistical appendix workbook added for technical tables, diagnostics, and
   reproducibility details
+- submission readiness checks added to the workflow
 - basic candidate models included for comparison
 
 Still to complete:
@@ -107,6 +108,7 @@ scripts/05_output_manifest.R       generated output file index
 scripts/05_output_quality_checks.R required output presence checks
 scripts/05_report_input_summary.R  report drafting input summary
 scripts/05_session_info.R          reproducibility metadata
+scripts/06_submission_readiness.R  final file-level readiness checks
 scripts/run_project.R              runs the full workflow
 scripts/run_windows_workflow.ps1   PowerShell helper for this Windows setup
 ```

@@ -12,5 +12,6 @@ source("scripts/05_output_manifest.R")
 source("scripts/05_output_quality_checks.R")
 source("scripts/05_report_input_summary.R")
 source("scripts/05_session_info.R")
+source("scripts/06_submission_readiness.R")
 
 message("Workflow complete. Check outputs/figures and outputs/tables.")
