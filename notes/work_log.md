@@ -79,9 +79,10 @@
 
 - Added a report workbook that links each report section to the generated
   tables and figures while leaving the final interpretation for the student.
+- Added a statistical appendix workbook to organise technical model details,
+  diagnostics, forecast evaluation evidence, and reproducibility checks.
 
 ## Next Commit Ideas
 
-- Add an appendix workbook for technical model details.
 - Add final submission readiness checks to the R workflow.
 - Record the remaining student-owned finalisation tasks.

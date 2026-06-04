@@ -36,6 +36,8 @@ Completed so far:
 - output folders prepared for generated figures and tables
 - report and statistical appendix templates added
 - report workbook added to connect generated evidence to final writing sections
+- statistical appendix workbook added for technical tables, diagnostics, and
+  reproducibility details
 - basic candidate models included for comparison
 
 Still to complete:
@@ -123,3 +125,6 @@ The report drafting evidence map is in `report/report_drafting_map.md`.
 The report workbook is in `report/final_report_workbook.qmd`. It is a drafting
 support file and still requires the student's own interpretation before any
 submission.
+
+The appendix workbook is in `report/statistical_appendix_workbook.qmd` and can
+be used to organise technical evidence that does not fit in the main report.

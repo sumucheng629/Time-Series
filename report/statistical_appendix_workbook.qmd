@@ -1,0 +1,179 @@
+---
+title: "Statistical Appendix Workbook"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+library(readr)
+library(dplyr)
+library(knitr)
+
+table_dir <- file.path("..", "outputs", "tables")
+figure_dir <- file.path("..", "outputs", "figures")
+```
+
+## Appendix Purpose
+
+This workbook collects the technical evidence that can support the main report
+without overcrowding it. The final appendix should be edited into the student's
+own presentation style after the final models are selected.
+
+## Data Preparation Details
+
+```{r}
+#| label: data-preparation
+clean_series <- read_csv(file.path(table_dir, "clean_birth_fertility_series.csv"),
+                         show_col_types = FALSE)
+series_summary <- read_csv(file.path(table_dir, "series_summary.csv"),
+                           show_col_types = FALSE)
+validation_checks <- read_csv(file.path(table_dir, "data_validation_checks.csv"),
+                              show_col_types = FALSE)
+
+kable(head(clean_series, 10), caption = "First ten analysis-ready rows")
+kable(tail(clean_series, 10), caption = "Last ten analysis-ready rows")
+kable(series_summary, caption = "Series summary")
+kable(validation_checks, caption = "Validation checks")
+```
+
+**Student-owned notes to add:**
+
+- State the raw file name and any relevant source note.
+- Explain the final selected columns and units.
+- State whether validation checks found any issue requiring correction.
+
+## Transformation and Differencing Details
+
+```{r}
+#| label: transformation-details
+transformation_series <- read_csv(file.path(table_dir, "transformation_series.csv"),
+                                  show_col_types = FALSE)
+transformation_screen <- read_csv(file.path(table_dir, "transformation_screen.csv"),
+                                  show_col_types = FALSE)
+recommendation_inputs <- read_csv(file.path(table_dir, "transformation_recommendation_inputs.csv"),
+                                  show_col_types = FALSE)
+differenced_series <- read_csv(file.path(table_dir, "differenced_series.csv"),
+                               show_col_types = FALSE)
+stationarity_screen <- read_csv(file.path(table_dir, "stationarity_screen.csv"),
+                                show_col_types = FALSE)
+
+kable(transformation_screen, caption = "Transformation screen")
+kable(recommendation_inputs, caption = "Transformation recommendation inputs")
+kable(head(differenced_series, 12), caption = "Differenced series preview")
+kable(stationarity_screen, caption = "Stationarity screen")
+```
+
+![Level ACF](`r file.path(figure_dir, "level_acf.png")`)
+
+![First-difference ACF](`r file.path(figure_dir, "first_difference_acf.png")`)
+
+## Candidate Model Specification
+
+The exact fitted model objects are produced in `scripts/03_model_comparison.R`.
+The final appendix can use this table to describe the comparison set without
+rewriting every formula in the main report.
+
+```{r}
+#| label: model-specification
+candidate_registry <- read_csv(file.path(table_dir, "candidate_model_registry.csv"),
+                               show_col_types = FALSE)
+candidate_terms <- read_csv(file.path(table_dir, "candidate_model_terms.csv"),
+                            show_col_types = FALSE)
+
+kable(candidate_registry, caption = "Candidate model registry")
+kable(candidate_terms, caption = "Candidate model terms")
+```
+
+**Equation notes to complete manually:**
+
+- Benchmark models: write the naive or drift form used as a baseline.
+- Trend models: write the deterministic trend relationship and error term.
+- ARIMA models: state the differencing order and the autoregressive or moving
+  average terms selected by the workflow.
+- ETS models: state the error, trend, and seasonal components reported in the
+  fitted terms table.
+
+## Fit Statistics and Diagnostics
+
+```{r}
+#| label: fit-diagnostics
+fit_statistics <- read_csv(file.path(table_dir, "candidate_model_fit_statistics.csv"),
+                           show_col_types = FALSE)
+ljung_box <- read_csv(file.path(table_dir, "residual_ljung_box_tests.csv"),
+                      show_col_types = FALSE)
+
+kable(fit_statistics, caption = "Candidate model fit statistics")
+kable(ljung_box, caption = "Residual Ljung-Box tests")
+```
+
+![Residual time plots](`r file.path(figure_dir, "candidate_model_residuals.png")`)
+
+![Residual ACF plots](`r file.path(figure_dir, "candidate_residual_acf.png")`)
+
+## Holdout Forecast Evaluation
+
+```{r}
+#| label: holdout-evaluation
+forecast_design <- read_csv(file.path(table_dir, "forecast_design.csv"),
+                            show_col_types = FALSE)
+holdout_accuracy <- read_csv(file.path(table_dir, "holdout_forecast_accuracy.csv"),
+                             show_col_types = FALSE)
+best_holdout <- read_csv(file.path(table_dir, "best_holdout_models.csv"),
+                         show_col_types = FALSE)
+selection_evidence <- read_csv(file.path(table_dir, "model_selection_evidence.csv"),
+                               show_col_types = FALSE)
+
+kable(forecast_design, caption = "Holdout design")
+kable(holdout_accuracy, caption = "Holdout accuracy")
+kable(best_holdout, caption = "Best holdout models by accuracy")
+kable(selection_evidence, caption = "Combined selection evidence")
+```
+
+![Holdout forecast comparison](`r file.path(figure_dir, "holdout_forecast_comparison.png")`)
+
+## Models Not Selected
+
+Use this section after final model selection. A concise appendix explanation is
+enough: identify candidates rejected because of weaker holdout accuracy,
+residual dependence, over-complexity for the sample size, or weaker alignment
+with the exploratory patterns.
+
+| Series | Rejected model | Main reason | Evidence table or figure |
+| --- | --- | --- | --- |
+| Total fertility rate | To complete | To complete | To complete |
+| Total live births | To complete | To complete | To complete |
+
+## Reproducibility Notes
+
+```{r}
+#| label: reproducibility
+manifest <- read_csv(file.path(table_dir, "output_manifest.csv"),
+                     show_col_types = FALSE)
+quality_checks <- read_csv(file.path(table_dir, "output_quality_checks.csv"),
+                           show_col_types = FALSE)
+report_input_summary <- read_csv(file.path(table_dir, "report_input_summary.csv"),
+                                 show_col_types = FALSE)
+
+kable(manifest, caption = "Generated output manifest")
+kable(quality_checks, caption = "Output quality checks")
+kable(report_input_summary, caption = "Report input summary")
+```
+
+The workflow can be reproduced from the project root with:
+
+```r
+source("scripts/run_project.R")
+```
+
+On this Windows setup, the PowerShell helper can be used:
+
+```powershell
+.\scripts\run_windows_workflow.ps1
+```
+
