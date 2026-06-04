@@ -1,0 +1,195 @@
+---
+title: "Singapore Birth and Fertility Time Series Workbook"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+editor: visual
+---
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+library(dplyr)
+library(readr)
+library(knitr)
+
+table_dir <- file.path("..", "outputs", "tables")
+figure_dir <- file.path("..", "outputs", "figures")
+```
+
+## Working Research Question
+
+Draft the final question in the student's own words. It should connect long-run
+movement in Singapore fertility and live births to the forecasting task, and it
+should be narrow enough to answer using the annual series in this repository.
+
+**Student draft space:**
+
+> Replace this note with a one- or two-sentence research question.
+
+## Data Evidence
+
+Use the generated summary and validation outputs to describe the source table,
+the final years retained, the two measured series, and any data checks completed
+before modelling.
+
+```{r}
+#| label: data-summary
+series_summary <- read_csv(file.path(table_dir, "series_summary.csv"),
+                           show_col_types = FALSE)
+validation_checks <- read_csv(file.path(table_dir, "data_validation_checks.csv"),
+                              show_col_types = FALSE)
+
+kable(series_summary, caption = "Analysis series summary")
+kable(validation_checks, caption = "Data validation checks")
+```
+
+**Writing prompts:**
+
+- What is the final observation window?
+- Which variables are measured directly and which values are derived?
+- Do the validation checks show any missing, duplicate, or impossible values?
+
+## Exploratory Evidence
+
+The main exploratory figures should be inspected before choosing final model
+language. The report should focus on visible direction, turning points, scale,
+and persistence rather than listing every number in the output tables.
+
+![Annual series overview](`r file.path(figure_dir, "annual_series_overview.png")`)
+
+![Annual first differences](`r file.path(figure_dir, "annual_first_differences.png")`)
+
+```{r}
+#| label: descriptive-tables
+descriptive_features <- read_csv(file.path(table_dir, "descriptive_features.csv"),
+                                 show_col_types = FALSE)
+annual_change_features <- read_csv(file.path(table_dir, "annual_change_features.csv"),
+                                   show_col_types = FALSE)
+
+kable(descriptive_features, caption = "Descriptive features")
+kable(annual_change_features, caption = "Annual change features")
+```
+
+**Student draft space:**
+
+> Summarise the main time-series features in the student's own language.
+
+## Transformation and Stationarity Evidence
+
+Use this section to decide whether the final discussion should refer to original
+scale, log scale, differencing, or a combination of these modelling supports.
+
+![Scale comparison](`r file.path(figure_dir, "scale_comparison.png")`)
+
+```{r}
+#| label: transformation-stationarity
+transformation_screen <- read_csv(file.path(table_dir, "transformation_screen.csv"),
+                                  show_col_types = FALSE)
+stationarity_screen <- read_csv(file.path(table_dir, "stationarity_screen.csv"),
+                                show_col_types = FALSE)
+
+kable(transformation_screen, caption = "Transformation screen")
+kable(stationarity_screen, caption = "Stationarity screen")
+```
+
+**Writing prompts:**
+
+- Does one scale look more stable or easier to model?
+- Do first differences reduce persistence enough for candidate models?
+- Which evidence belongs in the main report and which belongs in the appendix?
+
+## Candidate Model Evidence
+
+The workflow compares benchmark, trend, ARIMA, and ETS-style candidates. The
+final report should explain why each family is considered before choosing a
+preferred model for each series.
+
+```{r}
+#| label: candidate-models
+candidate_model_registry <- read_csv(file.path(table_dir, "candidate_model_registry.csv"),
+                                     show_col_types = FALSE)
+fit_statistics <- read_csv(file.path(table_dir, "candidate_model_fit_statistics.csv"),
+                           show_col_types = FALSE)
+
+kable(candidate_model_registry, caption = "Candidate model registry")
+kable(fit_statistics, caption = "Candidate model fit statistics")
+```
+
+**Student draft space:**
+
+> Write a short comparison of the model families. Avoid claiming that a model is
+> final until forecast accuracy and diagnostics have also been checked.
+
+## Diagnostics Evidence
+
+Residual plots and Ljung-Box checks should be used to identify models that fit
+the holdout well but still leave obvious dependence in the errors.
+
+![Candidate residuals](`r file.path(figure_dir, "candidate_model_residuals.png")`)
+
+![Candidate residual ACF](`r file.path(figure_dir, "candidate_residual_acf.png")`)
+
+```{r}
+#| label: diagnostics
+ljung_box <- read_csv(file.path(table_dir, "residual_ljung_box_tests.csv"),
+                      show_col_types = FALSE)
+
+kable(ljung_box, caption = "Residual Ljung-Box tests")
+```
+
+**Writing prompts:**
+
+- Which candidates have residual checks that support adequate fit?
+- Which candidates should be treated cautiously despite good accuracy?
+- Do the two series require different final model choices?
+
+## Forecast Evaluation Evidence
+
+The holdout design and forecast accuracy table provide the strongest evidence
+for model selection. Accuracy should be interpreted with diagnostics rather than
+used mechanically.
+
+![Holdout forecast comparison](`r file.path(figure_dir, "holdout_forecast_comparison.png")`)
+
+```{r}
+#| label: forecast-evaluation
+forecast_design <- read_csv(file.path(table_dir, "forecast_design.csv"),
+                            show_col_types = FALSE)
+holdout_accuracy <- read_csv(file.path(table_dir, "holdout_forecast_accuracy.csv"),
+                             show_col_types = FALSE)
+selection_evidence <- read_csv(file.path(table_dir, "model_selection_evidence.csv"),
+                               show_col_types = FALSE)
+
+kable(forecast_design, caption = "Forecast evaluation design")
+kable(holdout_accuracy, caption = "Holdout forecast accuracy")
+kable(selection_evidence, caption = "Combined model selection evidence")
+```
+
+**Student draft space:**
+
+> Name the selected model for each series and justify the choice using both
+> holdout accuracy and diagnostics.
+
+## Final Forecast Evidence
+
+The final forecast figure should be interpreted as a conditional projection
+from the selected modelling approach, not as a demographic certainty.
+
+![Five-year candidate forecasts](`r file.path(figure_dir, "five_year_candidate_forecasts.png")`)
+
+**Writing prompts:**
+
+- What direction does the forecast suggest for each series?
+- How wide are the uncertainty bands relative to recent changes?
+- Which limitations should be stated because the data are annual and structural
+  demographic shifts may occur?
+
+## Conclusion Draft Space
+
+> Write the final answer to the research question after the model choices have
+> been checked. Keep this paragraph evidence-based and avoid adding claims that
+> were not supported by the generated outputs.
+

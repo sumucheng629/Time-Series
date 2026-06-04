@@ -75,8 +75,13 @@
 - Added a report input summary output to combine validation status, output
   quality status, holdout window, and top accuracy models for drafting review.
 
+## 2026-06-05
+
+- Added a report workbook that links each report section to the generated
+  tables and figures while leaving the final interpretation for the student.
+
 ## Next Commit Ideas
 
-- Run the workflow in RStudio and commit generated tables/figures if required.
-- Review model diagnostics and record which candidates are plausible.
-- Start a first report draft using the student's own interpretation.
+- Add an appendix workbook for technical model details.
+- Add final submission readiness checks to the R workflow.
+- Record the remaining student-owned finalisation tasks.

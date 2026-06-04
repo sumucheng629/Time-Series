@@ -35,6 +35,7 @@ Completed so far:
 - report drafting checklist and output index added for the next writing stage
 - output folders prepared for generated figures and tables
 - report and statistical appendix templates added
+- report workbook added to connect generated evidence to final writing sections
 - basic candidate models included for comparison
 
 Still to complete:
@@ -118,3 +119,7 @@ The latest successful workflow run is documented in
 `notes/run_2026-05-31.md`.
 
 The report drafting evidence map is in `report/report_drafting_map.md`.
+
+The report workbook is in `report/final_report_workbook.qmd`. It is a drafting
+support file and still requires the student's own interpretation before any
+submission.
