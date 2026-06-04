@@ -130,3 +130,7 @@ submission.
 
 The appendix workbook is in `report/statistical_appendix_workbook.qmd` and can
 be used to organise technical evidence that does not fit in the main report.
+
+The finalisation checklist is in
+`notes/finalisation_checklist_2026-06-05.md`. The report gap check is in
+`report/final_report_gap_check.md`.

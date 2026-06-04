@@ -83,7 +83,10 @@
   diagnostics, forecast evaluation evidence, and reproducibility checks.
 - Added submission readiness checks to verify that core workflow files,
   generated evidence, report workbooks, notes, and references are present.
+- Added a finalisation checklist and report gap check to guide the last
+  student-owned drafting and review stage.
 
 ## Next Commit Ideas
 
-- Record the remaining student-owned finalisation tasks.
+- Fill the report and appendix with the student's own final interpretation.
+- Rerun the workflow immediately before submission.
