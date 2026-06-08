@@ -7,6 +7,8 @@ Thumbs.db
 # Rendered reports and temporary Quarto outputs
 *.html
 *.pdf
+!report/final_report.pdf
+!report/statistical_appendix.pdf
 *_files/
 .quarto/
 
