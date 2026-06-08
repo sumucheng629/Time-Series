@@ -1,0 +1,565 @@
+---
+title: "Singapore Birth and Fertility Time Series Analysis"
+subtitle: "MATH X313 — Time Series Analysis"
+author: "Zhu Ying (a1984460)"
+date: "2026-06-06"
+format:
+  pdf:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+    colorlinks: true
+    fig-pos: "H"
+    geometry:
+      - top=25mm
+      - bottom=25mm
+      - left=25mm
+      - right=25mm
+    include-in-header:
+      text: |
+        \usepackage{booktabs}
+        \usepackage{longtable}
+        \usepackage{float}
+        \usepackage{fancyhdr}
+        \pagestyle{fancy}
+        \fancyhead[L]{\small Singapore Birth \& Fertility Analysis}
+        \fancyhead[R]{\small MATH X313}
+        \fancyfoot[C]{\thepage}
+execute:
+  echo: false
+  warning: false
+  message: false
+editor: visual
+---
+
+```{r}
+#| label: setup
+library(dplyr)
+library(readr)
+library(knitr)
+library(ggplot2)
+
+table_dir <- file.path("..", "outputs", "tables")
+figure_dir <- file.path("..", "outputs", "figures")
+```
+
+## Research Question
+
+We use the Total Fertility Rate and the Total Live Births data from the Singapore
+Department of Statistics website, hereafter abbreviated as TFR and TLB
+respectively. Singapore's TFR has fallen from 5.76 children per woman in 1960
+to 0.87 in 2025 — the lowest on record and far below the replacement level of
+2.1. Over the same period, TLB declined from 61,775 to 30,004. This sustained
+decline is not unique to Singapore: Shair et al. (2024) document a similarly
+dramatic fall in Malaysia's TFR from an average of 6.4 infants per woman in 1960
+to 1.8 in 2020, and project Chinese and Indian Malaysian fertility rates falling
+below 1.0 by 2040.
+
+Understanding which population subgroups drive TFR is essential context for
+interpreting these trends. Chen et al. (2018) conduct an elasticity analysis of
+Singapore's TFR and find that 20–29-year-old single women and married childless
+women aged 30–34 are the most influential groups for changing TFR, yet
+Singapore's pro-natalist policies have historically favoured third and
+higher-order births — a policy mismatch that limits their effectiveness. The
+inability of targeted interventions to reverse the decline motivates a
+data-driven time series approach to quantify the trajectory statistically and
+produce reliable near-term projections.
+
+**Research question:** How have Singapore's annual TFR and TLB evolved since
+1960, and which course-based time series models provide the most reliable
+short-term forecasts of each series after residual diagnostic checking?
+
+The question is suited to annual time series methods because both series are
+measured once per year over a long observation window (66 years), exhibit
+clear trend and autocorrelation structure, and do not contain a seasonal
+component that would require higher-frequency data.
+
+## Data
+
+#### Source and Variables
+
+The data are drawn from the Singapore Department of Statistics (SingStat) births
+and fertility register, supplied as the file
+`data/raw/BirthsAndFertilityRatesAnnual.csv`. The file is in wide format (one
+row per demographic series, one column per year); the preparation script
+`scripts/01_prepare_data.R` reshapes it into a long-format tsibble indexed by
+measure and year.
+
+Two series are retained for analysis:
+
+- **Total Fertility Rate (TFR):** the average number of children a woman would
+  bear over her lifetime at the age-specific fertility rates observed in a given
+  year. Measured in children per woman.
+- **Total Live Births:** the count of live births registered in Singapore in
+  each calendar year.
+
+```{r}
+#| label: tbl-series-summary
+#| tbl-cap: "Analysis series summary"
+series_summary <- read_csv(file.path(table_dir, "series_summary.csv"),
+                           show_col_types = FALSE)
+kable(series_summary, digits = 2,
+      col.names = c("Measure", "First year", "Last year", "N",
+                    "First observation", "Latest observation"))
+```
+
+#### Data Validation
+
+An automated validation script confirmed: both series present, no missing
+observations, no duplicate measure-year keys, years consecutive from 1960 to
+2025, and all values strictly positive. No data quality corrections were
+required.
+
+```{r}
+#| label: tbl-validation
+#| tbl-cap: "Data validation checks"
+validation_checks <- read_csv(file.path(table_dir, "data_validation_checks.csv"),
+                              show_col_types = FALSE)
+kable(validation_checks)
+```
+
+The two series are highly correlated (Pearson *r* = 0.847), confirming that
+they move together over the long run while remaining analytically distinct.
+All subsequent analyses treat TFR and Total Live Births as separate univariate
+time series.
+
+## Exploratory Analysis
+
+#### Level Series
+
+```{r}
+#| label: fig-overview
+#| fig-cap: "Annual TFR and Total Live Births, Singapore 1960–2025."
+knitr::include_graphics(file.path(figure_dir, "annual_series_overview.png"))
+```
+
+Both series decline persistently from 1960 to 2025 (@fig-overview). TFR falls
+steeply through the 1960s and early 1970s as Singapore's post-independence
+demographic transition accelerated, then levels off near replacement level in
+the 1980s and 1990s before resuming a gradual decline. Total Live Births mirrors
+this broad pattern, with a notable baby-boom rebound in 1988 (the largest
+single-year increase of 9,341 births) followed by continued decline to the
+record low of 30,004 in 2025. Neither series is stationary: the mean level
+shifts persistently over time.
+
+```{r}
+#| label: tbl-descriptive
+#| tbl-cap: "Descriptive statistics by sub-period"
+descriptive <- read_csv(file.path(table_dir, "transformation_screen.csv"),
+                        show_col_types = FALSE) |>
+  select(Measure, period, observations, mean_observed, sd_observed,
+         coefficient_of_variation)
+kable(descriptive, digits = 3,
+      col.names = c("Series", "Period", "N", "Mean", "SD", "CV"))
+```
+
+The coefficient of variation (CV = SD/mean) for TFR declines sharply across the
+three 22-year sub-periods (early 1960–1981: CV = 0.41; middle 1982–2003:
+CV = 0.10; recent 2004–2025: CV = 0.10), indicating that the large early
+variation is not proportional to the mean level. For Total Live Births the CV
+is more stable (0.16 → 0.10 → 0.08), consistent with a series where variance
+scales more gently with the level.
+
+#### Annual First Differences
+
+```{r}
+#| label: fig-diffs
+#| fig-cap: "Year-on-year first differences of TFR (top) and Total Live Births (bottom)."
+knitr::include_graphics(file.path(figure_dir, "annual_first_differences.png"))
+```
+
+@fig-diffs shows the year-on-year changes. TFR has a mean annual change of
+−0.075 (SD 0.146), with the largest single-year decrease of −0.55 in 1967 and
+the largest increase of +0.34 in 1988. Total Live Births averages −489 per year
+(SD 2,595). The 1988 baby-boom produced the largest single-year increase of
+9,341; the sharpest single-year decline of −5,546 occurred in 2001, following
+the end of the baby-boom cohort entering peak childbearing age.
+
+The first differences appear considerably more stationary than the level series,
+suggesting that one order of differencing will be sufficient for modelling.
+
+## Transformation and Stationarity
+
+#### Scale Selection
+
+```{r}
+#| label: fig-scale
+#| fig-cap: "Original scale and log-scale standardised series, 1960 = 1."
+knitr::include_graphics(file.path(figure_dir, "scale_comparison.png"))
+```
+
+All observations are strictly positive, so logarithmic transformation is
+available for both series. @fig-scale overlays original and log-scaled
+(indexed) series. For TFR, the CV collapses from 0.41 in the early period to
+0.10 in later periods, indicating non-proportional variance; the original scale
+is therefore preferred. For Total Live Births, the more stable CV (0.16 → 0.08)
+means that log scale could also be used, but the original scale is retained
+throughout to maintain comparability between the two series. Log-scale
+modelling of live births is noted as an avenue for future model extensions.
+
+#### Autocorrelation Evidence
+
+```{r}
+#| label: tbl-stationarity
+#| tbl-cap: "Sample ACF1 at the level and after successive differencing"
+stationarity <- read_csv(file.path(table_dir, "stationarity_screen.csv"),
+                         show_col_types = FALSE) |>
+  select(Measure, level_acf1, first_difference_acf1, second_difference_acf1)
+kable(stationarity, digits = 3,
+      col.names = c("Series", "Level ACF1", "Diff(1) ACF1", "Diff(2) ACF1"))
+```
+
+Table 2 summarises the first-order autocorrelation coefficient (ACF1) at the
+level and after successive differencing. Both level series show very high ACF1
+(0.915 for TFR, 0.841 for TLB), consistent with non-stationary or near-unit-root
+behaviour. Letting $\nabla y_t = y_t - y_{t-1}$ denote the first-difference
+operator, one order of differencing reduces ACF1 to 0.370 ($\nabla$TFR) and
+$-$0.115 ($\nabla$TLB) — values close enough to zero to support approximate
+stationarity. Second differencing overshoots, increasing the magnitude of
+autocorrelation in both cases ($-$0.401 and $-$0.523 respectively), confirming
+over-differencing. These results justify using **d = 1** in all ARIMA candidates.
+
+## Candidate Models
+
+#### Training and Holdout Design
+
+The 66-observation sample is split into a **training window** (1960–2015,
+*n* = 56) and a **holdout window** (2016–2025, *n* = 10). All candidate models
+are estimated on the training data only. Holdout forecasts are compared to the
+observed values to evaluate out-of-sample accuracy.
+
+```{r}
+#| label: tbl-forecast-design
+#| tbl-cap: "Training and holdout split"
+forecast_design <- read_csv(file.path(table_dir, "forecast_design.csv"),
+                            show_col_types = FALSE)
+kable(forecast_design)
+```
+
+The 10-year holdout represents approximately 15% of the full series, which is
+a reasonable proportion for an annual demographic series. A longer holdout would
+reduce the training sample and risk underfitting the long-run trend.
+
+#### Model Set
+
+Five candidate models are fitted for each series:
+
+```{r}
+#| label: tbl-model-registry
+#| tbl-cap: "Candidate model registry"
+model_registry <- read_csv(file.path(table_dir, "candidate_model_registry.csv"),
+                           show_col_types = FALSE)
+kable(model_registry)
+```
+
+The two **benchmark** models (Naïve and Drift) provide simple baselines. The
+Naïve model forecasts the last observed value; the Drift model adds the average
+historical annual change. Any adequately specified model should outperform at
+least one of these.
+
+The **linear trend** model (TSLM) tests whether a deterministic regression on a
+time index is sufficient to explain the series. Its inclusion is valuable because
+it often achieves good holdout accuracy on monotonically declining series, but
+the residual structure must be checked carefully.
+
+The **ARIMA** and **ETS** candidates are the two principal course-based
+stochastic model families. ARIMA (AutoRegressive Integrated Moving Average)
+models the differenced series as a linear combination of its own past values and
+past innovations; ETS (Error, Trend, Seasonal) uses an exponential smoothing
+state-space framework (Hyndman and Athanasopoulos, 2021). Orders and parameters
+are selected by minimising the corrected Akaike information criterion (AICc;
+Hurvich and Tsai, 1989), which penalises model complexity more aggressively than
+AIC in small samples.
+
+#### Selected ARIMA Orders
+
+Automatic order selection produced different structures for the two series:
+
+**TFR — ARIMA(0,1,1).** The selected model applies one order of differencing
+(*d* = 1) and a single moving-average term (*q* = 1), with no autoregressive
+terms (*p* = 0). In the notation of Box et al. (2015), the fitted equation for
+$\nabla y_t = y_t - y_{t-1}$ is:
+
+$$
+\nabla y_t = (1 - 0.799\,B)\,\varepsilon_t, \quad \varepsilon_t \sim \text{N}(0,\,0.028)
+$$
+
+where $B$ is the backshift operator ($By_t = y_{t-1}$) and $\varepsilon_t$ is
+Gaussian white noise with estimated variance $\hat{\sigma}^2 = 0.028$. The
+MA(1) coefficient $\hat{\theta}_1 = -0.799$ is highly significant (SE = 0.075,
+*t* $\approx$ −10.7, *p* < 0.001). The negative sign means a positive shock in
+period *t* is partially reversed in the following period — consistent with
+modest short-term mean-reversion in TFR around its declining long-run level.
+This ARIMA(0,1,1) is algebraically equivalent to simple exponential smoothing
+applied to the first-differenced series, with AICc = −54.80.
+
+**Total Live Births — ARIMA(0,1,0).** Automatic order selection chose a pure
+random walk — one order of differencing with no AR or MA terms:
+
+$$
+\nabla y_t = \varepsilon_t, \quad \varepsilon_t \sim \text{N}(0,\,6{,}811{,}530)
+$$
+
+No additional parameters improved the AICc (= 1029.14). This specification is
+algebraically identical to the Naïve model (point forecast = last observed
+value), so the **Drift model** — which augments the random walk with an
+estimated constant annual change — provides a more informative alternative:
+
+$$
+\nabla y_t = \hat{b} + \varepsilon_t, \qquad \hat{b} = -356 \text{ births/year}
+$$
+
+```{r}
+#| label: tbl-model-terms
+#| tbl-cap: "Fitted model coefficients (training sample, 1960–2015)"
+model_terms <- read_csv(file.path(table_dir, "candidate_model_terms.csv"),
+                        show_col_types = FALSE)
+kable(model_terms, digits = 4)
+```
+
+## Model Diagnostics
+
+#### Residual Time Plots
+
+```{r}
+#| label: fig-residuals
+#| fig-cap: "One-step training residuals by model (columns) and series (rows)."
+knitr::include_graphics(file.path(figure_dir, "candidate_model_residuals.png"))
+```
+
+@fig-residuals shows the one-step innovations (residuals) on the training data.
+For TFR, the ARIMA(0,1,1) residuals scatter randomly around zero with no
+discernible pattern. The linear trend residuals show a pronounced U-shaped
+structure — positive in the early period, negative in the middle, then positive
+again — confirming that a purely deterministic linear trend fails to capture
+the changing rate of TFR decline. For Total Live Births, the ARIMA(0,1,0) and
+Naïve models produce identical residuals (as expected for equivalent
+specifications); the Drift model residuals are similarly consistent with white
+noise.
+
+#### Residual ACF
+
+```{r}
+#| label: fig-resid-acf
+#| fig-cap: "Residual autocorrelation functions (lags 1–14) for each candidate model."
+knitr::include_graphics(file.path(figure_dir, "candidate_residual_acf.png"))
+```
+
+@fig-resid-acf plots the residual autocorrelation functions to lag 14. For TFR,
+the ARIMA(0,1,1) residual ACF has no spikes outside the 95% confidence bands,
+providing strong visual evidence of adequate fit. The linear trend model leaves
+persistent positive autocorrelation at early lags — a clear sign of unmodelled
+dynamics. For Total Live Births, the ARIMA(0,1,0), Drift, ETS, and Naïve
+residual ACFs are all consistent with white noise; the linear trend again shows
+strong autocorrelation.
+
+#### Ljung-Box Tests
+
+The Ljung–Box portmanteau test at lag 10 (Ljung and Box, 1978) provides a
+formal check of residual independence. A p-value above 0.05 indicates that
+the residuals do not show significant autocorrelation at the 5% level, which
+we take as evidence of adequate model fit.
+
+```{r}
+#| label: tbl-ljung-box
+#| tbl-cap: "Ljung-Box residual test (lag = 10) for each candidate model"
+ljung_box <- read_csv(file.path(table_dir, "residual_ljung_box_tests.csv"),
+                      show_col_types = FALSE)
+kable(ljung_box, digits = 4,
+      col.names = c("Series", "Model", "LB statistic", "p-value"))
+```
+
+For TFR, only ARIMA(0,1,1) (p = 0.346) and ETS (p = 0.736) pass the test.
+The Naïve and Drift models fail badly (p < 0.001), as does the linear trend
+model (LB = 177.5, p < 0.001). For Total Live Births, ARIMA(0,1,0), Drift,
+ETS, and Naïve all pass; the linear trend fails decisively (LB = 109.6,
+p < 0.001).
+
+## Forecast Evaluation
+
+#### Holdout Accuracy
+
+```{r}
+#| label: tbl-holdout-accuracy
+#| tbl-cap: "Holdout forecast accuracy (2016–2025)"
+holdout_accuracy <- read_csv(file.path(table_dir, "holdout_forecast_accuracy.csv"),
+                             show_col_types = FALSE) |>
+  select(Measure, .model, RMSE, MAE, MAPE) |>
+  arrange(Measure, RMSE)
+kable(holdout_accuracy, digits = 3)
+```
+
+For **TFR** (@tbl-holdout-accuracy), ARIMA(0,1,1) achieves the lowest holdout
+RMSE (0.178) and MAE (0.153) of all five candidates. ETS is the closest
+competitor (RMSE 0.190). The linear trend extrapolates a long-run trajectory
+that substantially overshoots the near-term observed values (MAPE 93%), making
+it the weakest performer despite its simple structure.
+
+For **Total Live Births**, the linear trend achieves the lowest holdout RMSE
+(2,719) and MAE (2,321). However, its residuals carry severe autocorrelation
+(LB = 109.6, p < 0.001), which invalidates its prediction intervals — a model
+with correlated residuals will systematically misstate forecast uncertainty.
+Among models with adequate residual diagnostics, the **Drift** model achieves
+the best RMSE (4,097) and MAE (3,296), substantially better than ARIMA(0,1,0),
+ETS, and Naïve (all around RMSE 6,240).
+
+#### Holdout Forecast Plot
+
+```{r}
+#| label: fig-holdout
+#| fig-cap: "Holdout forecast comparison (2016–2025). Solid black: observed. Shaded: 80% prediction interval."
+knitr::include_graphics(file.path(figure_dir, "holdout_forecast_comparison.png"))
+```
+
+@fig-holdout shows the training series, holdout observed values, and 80%
+prediction intervals for each candidate. For TFR, the ARIMA(0,1,1) band is
+well-centred on the observed holdout path. For Total Live Births, the linear
+trend tracks the holdout trajectory closely by extrapolating the long-run
+decline, but its prediction intervals are statistically invalid. The Drift
+model's intervals are wider but properly calibrated.
+
+#### Model Selection
+
+**TFR — ARIMA(0,1,1) selected.** This model simultaneously achieves the best
+holdout RMSE and MAE and passes the Ljung-Box residual test (p = 0.346). No
+other candidate improves on both criteria. ETS is retained as a secondary
+reference in the forecast figures.
+
+**Total Live Births — Drift model selected.** The linear trend's superior raw
+accuracy is disqualified by a catastrophic residual diagnostic failure (LB
+statistic = 109.6, p < 0.001): its residuals carry substantial unmodelled
+autocorrelation that invalidates any stated prediction interval. Among the four
+diagnostically adequate models, Drift achieves the best holdout RMSE (4,097)
+and retains an economically interpretable structure — the estimated annual
+decline of 356 births per year directly reflects the observed long-run trend.
+Although the Drift coefficient for live births is not individually significant
+at the 5% level (t = −0.96, p = 0.341), the substantive direction of decline
+is supported by over six decades of data and is appropriate for a five-year
+projection horizon.
+
+## Final Forecasts
+
+Both selected models are refitted to the full 66-observation series (1960–2025) before producing five-year-ahead forecasts. Using the complete sample rather than the training-only window reduces estimation uncertainty now that model selection is settled.
+
+```{r}
+#| label: fig-forecasts
+#| fig-cap: "Five-year forecasts (2026–2030) from all candidates refitted to the full 1960–2025 series. Inner band: 80% PI; outer band: 95% PI."
+knitr::include_graphics(file.path(figure_dir, "five_year_candidate_forecasts.png"))
+```
+
+Both selected models are refitted to the complete 66-observation series
+(1960–2025) before producing five-year-ahead forecasts (@fig-forecasts). The
+selected models — ARIMA(0,1,1) for TFR and Drift for Total Live Births — are
+the primary forecasting reference.
+
+**TFR.** The ARIMA(0,1,1) model refitted to 1960–2025 projects a continued
+modest decline, with the point forecast for 2030 falling below 0.87. The 95%
+prediction interval widens considerably at five years because the
+random-walk component accumulates uncertainty each period. The lower bound of
+the 95% interval approaches zero by 2030, reflecting substantial statistical
+uncertainty at this horizon and underscoring that these projections should be
+interpreted as probabilistic rather than precise predictions.
+
+**Total Live Births.** The Drift model projects a continuation of the estimated
+annual decline of approximately 356 births per year. The resulting 2030 point
+forecast is approximately 28,200, with prediction intervals widening
+substantially over the five-year horizon. This forecast is conditional on the
+persistence of the average rate of change observed over 1960–2025. Policy
+interventions — such as extended parental leave schemes or housing subsidies
+for young families — or structural demographic shifts lie outside the model's
+assumptions and could alter the trajectory.
+
+**Limitations.** Both final models are purely univariate and include no
+demographic covariates. Chen et al. (2018) show that Singapore's pro-natalist
+policies have historically targeted third and higher-order births, whereas the
+groups most influential for TFR are 20–29-year-old single women and married
+childless women aged 30–34; incorporating such subgroup dynamics would require
+a richer covariate model. A natural extension within the time series framework
+would be to model TLB as a function of TFR — a conditional-forecast approach
+demonstrated in the companion analysis — exploiting the Pearson correlation of
+0.847 between the two series. The annual data frequency precludes seasonal
+decomposition, and the 10-year holdout has limited power to discriminate between
+models with similar accuracy. Structural breaks at the sharp 1980s and 2000s
+policy shifts are not explicitly modelled.
+
+## Conclusion
+
+This report examined Singapore's annual Total Fertility Rate and Total Live
+Births from 1960 to 2025 using time series methods covered in the MATH X313
+curriculum. Both series display persistent long-run decline and strong level
+autocorrelation (ACF1 ≈ 0.91 and 0.84 respectively), requiring first
+differencing before ARIMA estimation.
+
+For TFR, **ARIMA(0,1,1)** was selected on the basis of the best combination of
+holdout forecast accuracy (RMSE = 0.178, MAE = 0.153) and clean residual
+diagnostics (Ljung-Box p = 0.346). The fitted MA(1) coefficient of −0.799
+captures a partial reversion of shocks within one year.
+
+For Total Live Births, the **Drift model** was selected. The linear trend
+model's superior raw accuracy was disqualified by a severe violation of the
+residual independence assumption (LB = 109.6, p < 0.001), which renders its
+prediction intervals statistically invalid. The Drift model passes all
+diagnostic checks, captures the long-run declining trend, and achieves the best
+holdout RMSE (4,097) among diagnostically adequate candidates.
+
+Five-year forecasts suggest that TFR will continue to decline modestly below
+0.87, and total live births will fall toward approximately 28,200 by 2030, with
+wide uncertainty bands reflecting the inherent difficulty of demographic
+forecasting. Future work should incorporate TFR as a covariate for live-birth
+modelling and investigate whether government pro-natalist policy expenditure
+constitutes a structural break that improves forecast accuracy.
+
+## References
+
+Akaike, H. (1974). A new look at the statistical model identification.
+*IEEE Transactions on Automatic Control*, 21(6), 716–723.
+https://doi.org/10.1109/TAC.1974.1100705
+
+Box, G. E. P., Jenkins, G. M., Reinsel, G. C., and Ljung, G. M. (2015).
+*Time Series Analysis: Forecasting and Control* (5th ed.). Wiley.
+
+Hyndman, R. J., and Athanasopoulos, G. (2021). *Forecasting: Principles and
+Practice* (3rd ed.). OTexts. https://otexts.com/fpp3/
+
+Hurvich, C. M., and Tsai, C.-L. (1989). Regression and time series model
+selection in small samples. *Biometrika*, 76(2), 297–307.
+https://doi.org/10.1093/biomet/76.2.297
+
+Kwiatkowski, D., Phillips, P. C. B., Schmidt, P., and Shin, Y. (1992). Testing
+the null hypothesis of stationarity against the alternative of a unit root.
+*Journal of Econometrics*, 54(1–3), 159–178.
+https://doi.org/10.1016/0304-4076(92)90104-Y
+
+Ljung, G. M., and Box, G. E. P. (1978). On a measure of lack of fit in time
+series models. *Biometrika*, 65(2), 297–303.
+https://doi.org/10.1093/biomet/65.2.297
+
+O'Hara-Wild, M., Hyndman, R. J., and Wang, E. (2024). *fable: Forecasting
+Models for Tidy Time Series*. R package version 0.5.0.
+https://CRAN.R-project.org/package=fable
+
+O'Hara-Wild, M., Hyndman, R. J., and Wang, E. (2024). *feasts: Feature
+Extraction and Statistics for Time Series*. R package version 0.5.0.
+https://CRAN.R-project.org/package=feasts
+
+R Core Team (2024). *R: A Language and Environment for Statistical Computing*.
+R Foundation for Statistical Computing, Vienna, Austria.
+https://www.R-project.org/
+
+Singapore Department of Statistics. (2026). *Births and Fertility Rates,
+Annual* [Dataset]. data.gov.sg.
+https://data.gov.sg/datasets/d_e39eeaeadb571c0d0725ef1eec48d166/view
+
+Wang, E., Cook, D., and Hyndman, R. J. (2020). A new tidy data structure to
+support exploration and modeling of temporal data. *Journal of Computational
+and Graphical Statistics*, 29(3), 466–478.
+https://doi.org/10.1080/10618600.2019.1695624
+
+Chen, M., Yip, P. S. F., and Yap, M. T. (2018). Identifying the most
+influential groups in determining Singapore's fertility. *Journal of Social
+Policy*, 47(1), 139–160. https://doi.org/10.1017/S0047279417000241
+
+Shair, S. N., Shaadan, N., Amirudin, N. A. B. M., and A'kashalf, N. A. M.
+(2024). Predictions of Malaysia age-specific fertility rates using the
+Lee-Carter and the functional data approaches. *AIUB Journal of Science and
+Engineering*, 23(1). https://doi.org/10.53799/ajse.v23i1.1024

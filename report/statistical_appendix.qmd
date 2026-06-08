@@ -1,0 +1,360 @@
+---
+title: "Statistical Appendix"
+subtitle: "Singapore Birth and Fertility Time Series — MATH X313"
+author: "Zhu Ying (a1984460)"
+date: today
+format:
+  pdf:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+    colorlinks: true
+    fig-pos: "H"
+    geometry:
+      - top=25mm
+      - bottom=25mm
+      - left=25mm
+      - right=25mm
+    include-in-header:
+      text: |
+        \usepackage{booktabs}
+        \usepackage{longtable}
+        \usepackage{float}
+        \usepackage{fancyhdr}
+        \pagestyle{fancy}
+        \fancyhead[L]{\small Statistical Appendix}
+        \fancyhead[R]{\small MATH X313}
+        \fancyfoot[C]{\thepage}
+execute:
+  echo: true
+  warning: false
+  message: false
+editor: visual
+---
+
+```{r}
+#| label: setup
+library(readr)
+library(dplyr)
+library(knitr)
+
+table_dir <- file.path("..", "outputs", "tables")
+figure_dir <- file.path("..", "outputs", "figures")
+```
+
+## Data Preparation Details
+
+The analysis uses `data/raw/BirthsAndFertilityRatesAnnual.csv`, obtained from
+the Singapore Department of Statistics (SingStat) births and fertility register.
+The raw file is in wide format: each row is a named demographic series and each
+column is a calendar year. The preparation script `scripts/01_prepare_data.R`
+performs the following steps:
+
+1. Reads the raw CSV and identifies year columns by pattern matching.
+2. Pivots to long format with columns `Measure`, `Year`, and `Observed`.
+3. Parses year columns as integers and observed values as numeric.
+4. Filters to the two analysis series (Total Fertility Rate and Total Live
+   Births) by exact name match after trimming whitespace.
+5. Constructs a `tsibble` time series object indexed by `Measure` and `Year`.
+
+The validation script `scripts/01_validate_data.R` then confirms the
+cleaned data meet all required quality checks before any analysis proceeds.
+
+```{r}
+#| label: tbl-clean-head
+#| tbl-cap: "First ten rows of the cleaned analysis-ready series"
+clean_series <- read_csv(file.path(table_dir, "clean_birth_fertility_series.csv"),
+                         show_col_types = FALSE)
+kable(head(clean_series, 10), digits = 4)
+```
+
+```{r}
+#| label: tbl-clean-tail
+#| tbl-cap: "Last ten rows of the cleaned analysis-ready series"
+kable(tail(clean_series, 10), digits = 4)
+```
+
+```{r}
+#| label: tbl-series-summary
+#| tbl-cap: "Series summary"
+series_summary <- read_csv(file.path(table_dir, "series_summary.csv"),
+                           show_col_types = FALSE)
+kable(series_summary, digits = 2)
+```
+
+```{r}
+#| label: tbl-validation
+#| tbl-cap: "Automated data validation checks"
+validation_checks <- read_csv(file.path(table_dir, "data_validation_checks.csv"),
+                              show_col_types = FALSE)
+kable(validation_checks)
+```
+
+All six validation checks passed with no corrections required. The analysis
+window is 1960–2025, yielding 66 annual observations per series. No imputation
+or interpolation was performed.
+
+## Additional Exploratory Plots
+
+### Level ACF
+
+```{r}
+#| label: fig-level-acf
+#| fig-cap: "Sample ACF of both series at the original (level) scale."
+knitr::include_graphics(file.path(figure_dir, "level_acf.png"))
+```
+
+The level ACFs (@fig-level-acf) decay very slowly and monotonically, with
+virtually every lag exceeding the 95% confidence bands. This pattern is
+characteristic of an integrated (I(1)) or near-unit-root process. Modelling
+at the level without differencing would leave strong autocorrelation in the
+residuals, violating the white-noise assumption of ARIMA models.
+
+### First-Difference ACF
+
+```{r}
+#| label: fig-diff-acf
+#| fig-cap: "Sample ACF after one order of first differencing."
+knitr::include_graphics(file.path(figure_dir, "first_difference_acf.png"))
+```
+
+After first differencing (@fig-diff-acf):
+
+- **TFR:** A positive spike at lag 1 (ACF1 ≈ 0.37) remains within the
+  confidence band boundary. This single significant lag motivates the MA(1)
+  term in the ARIMA(0,1,1) selection.
+- **Total Live Births:** No spikes beyond lag 0 are significant, consistent
+  with the ARIMA(0,1,0) (random walk) selection. The differenced series
+  behaves as approximately white noise.
+
+## Model Equations
+
+### Benchmark Models
+
+**Naïve model:**
+$$
+\hat{y}_{T+h|T} = y_T \quad \text{for all } h \geq 1
+$$
+The point forecast is always the last observed value. Prediction intervals
+widen at rate $\sqrt{h}$.
+
+**Drift model (random walk with drift):**
+$$
+y_t = y_{t-1} + \hat{b} + \varepsilon_t, \quad \varepsilon_t \sim \text{WN}(0, \sigma^2)
+$$
+where $\hat{b}$ is estimated as the average of all historical first differences:
+$$
+\hat{b} = \frac{y_T - y_1}{T - 1}
+$$
+For TFR: $\hat{b} = -0.082$ (SE = 0.021).
+For Total Live Births: $\hat{b} = -356$ births per year (SE = 371).
+
+### Deterministic Trend Model
+
+$$
+y_t = \beta_0 + \beta_1 \cdot t + \varepsilon_t, \quad \varepsilon_t \sim \text{WN}(0, \sigma^2)
+$$
+
+For TFR: $\hat{\beta}_0 = 4.056$, $\hat{\beta}_1 = -0.0645$ (both *p* < 0.001).
+For Total Live Births: $\hat{\beta}_0 = 52{,}542$, $\hat{\beta}_1 = -249.5$
+(both *p* < 0.001). Despite highly significant coefficients, the residuals of
+this model carry strong autocorrelation for both series (see @sec-diagnostics),
+invalidating the white-noise assumption.
+
+### ARIMA Models
+
+The general ARIMA(*p*, *d*, *q*) model for a time series $y_t$ after *d*
+orders of differencing is:
+
+$$
+\phi(B)(1-B)^d y_t = \theta(B)\,\varepsilon_t
+$$
+
+where $\phi(B) = 1 - \phi_1 B - \cdots - \phi_p B^p$ is the AR polynomial,
+$\theta(B) = 1 - \theta_1 B - \cdots - \theta_q B^q$ is the MA polynomial,
+$B$ is the backshift operator, and
+$\varepsilon_t \sim \text{WN}(0, \sigma^2)$.
+
+**TFR — ARIMA(0,1,1):** $p = 0$, $d = 1$, $q = 1$:
+$$
+(1 - B)\,y_t = (1 + \theta_1 B)\,\varepsilon_t
+$$
+$$
+y_t - y_{t-1} = \varepsilon_t - 0.799\,\varepsilon_{t-1}
+$$
+Estimated innovation variance: $\hat{\sigma}^2 = 0.0196$. AICc = −54.80.
+This model is equivalent to simple exponential smoothing (SES) on the
+differenced series with smoothing parameter $\alpha = 1 - |\theta_1| = 0.201$.
+
+**Total Live Births — ARIMA(0,1,0):**
+$$
+(1 - B)\,y_t = \varepsilon_t \implies y_t - y_{t-1} = \varepsilon_t
+$$
+Estimated innovation variance: $\hat{\sigma}^2 = 7{,}542{,}931$. AICc = 1029.14.
+This is a pure random walk; the Drift model (above) is preferred for live births
+because it captures the persistent declining trend.
+
+### ETS Model
+
+The ETS model selected by the fable package is of the form
+ETS(A, Ad, N) for TFR — additive error, damped additive trend, no seasonality:
+
+$$
+\begin{aligned}
+y_t &= \ell_{t-1} + \phi\,b_{t-1} + \varepsilon_t \\
+\ell_t &= \ell_{t-1} + \phi\,b_{t-1} + \alpha\,\varepsilon_t \\
+b_t &= \phi\,b_{t-1} + \beta\,\varepsilon_t
+\end{aligned}
+$$
+
+Estimated parameters for TFR: $\alpha = 0.993$, $\beta = 0.0001$,
+$\phi = 0.901$, $\ell_0 = 6.199$, $b_0 = -0.511$.
+The near-unity $\alpha$ implies very fast adaptation of the level, while the
+small $\beta$ and damped $\phi < 1$ produce a slowly decaying trend component.
+
+For Total Live Births the selected ETS is ETS(A, N, N) — simple exponential
+smoothing with additive error and no trend or seasonal component:
+$$
+y_t = \ell_{t-1} + \varepsilon_t, \quad \ell_t = \ell_{t-1} + \alpha\,\varepsilon_t
+$$
+Estimated: $\alpha = 0.890$, $\ell_0 = 61{,}570$.
+
+## Model Selection Tables {#sec-diagnostics}
+
+```{r}
+#| label: tbl-fit-stats
+#| tbl-cap: "Candidate model fit statistics (training sample, 1960–2015)"
+fit_stats <- read_csv(file.path(table_dir, "candidate_model_fit_statistics.csv"),
+                      show_col_types = FALSE) |>
+  select(Measure, .model, AIC, AICc, BIC)
+kable(fit_stats, digits = 2)
+```
+
+```{r}
+#| label: tbl-ljung-box
+#| tbl-cap: "Ljung-Box residual test (lag = 10)"
+ljung_box <- read_csv(file.path(table_dir, "residual_ljung_box_tests.csv"),
+                      show_col_types = FALSE)
+kable(ljung_box, digits = 4,
+      col.names = c("Series", "Model", "LB statistic", "p-value"))
+```
+
+```{r}
+#| label: fig-resid
+#| fig-cap: "One-step training residuals by model and series."
+knitr::include_graphics(file.path(figure_dir, "candidate_model_residuals.png"))
+```
+
+```{r}
+#| label: fig-resid-acf
+#| fig-cap: "Residual ACF (lags 1–14) for each candidate model."
+knitr::include_graphics(file.path(figure_dir, "candidate_residual_acf.png"))
+```
+
+```{r}
+#| label: tbl-selection-evidence
+#| tbl-cap: "Combined model selection evidence"
+selection_evidence <- read_csv(file.path(table_dir, "model_selection_evidence.csv"),
+                               show_col_types = FALSE) |>
+  select(Measure, .model, RMSE, MAE, MAPE, AICc,
+         ljung_box_p_value, residual_pass_ljung_box_0_05, review_flag)
+kable(selection_evidence, digits = 3)
+```
+
+## Models Not Selected
+
+The table below records the reason each non-selected candidate was rejected.
+
+| Series | Rejected model | Main reason | Supporting evidence |
+|---|---|---|---|
+| TFR | Naïve | Fails Ljung-Box (p < 0.001); higher RMSE than ARIMA | @tbl-ljung-box; @tbl-holdout-accuracy |
+| TFR | Drift | Fails Ljung-Box (p < 0.001); RMSE = 0.318 vs ARIMA 0.178 | @tbl-ljung-box; @tbl-holdout-accuracy |
+| TFR | Linear trend | Fails Ljung-Box (LB = 177.5, p < 0.001); MAPE = 93% | @tbl-ljung-box; @fig-resid-acf |
+| TFR | ETS | Passes diagnostics but higher RMSE (0.190) than ARIMA (0.178) | @tbl-holdout-accuracy |
+| Live Births | Naïve | Identical to ARIMA(0,1,0); lower RMSE than Drift | — |
+| Live Births | ARIMA(0,1,0) | Equivalent to Naïve; Drift captures historical trend better | @tbl-holdout-accuracy |
+| Live Births | ETS | Passes diagnostics but RMSE = 6,222 vs Drift 4,097 | @tbl-holdout-accuracy |
+| Live Births | Linear trend | Fails Ljung-Box (LB = 109.6, p < 0.001); invalid PIs | @tbl-ljung-box |
+
+The linear trend model deserves specific comment for Total Live Births. Its
+holdout RMSE (2,719) is the lowest of all five candidates, which might suggest
+it is the best model by a simple accuracy criterion. However, a model with
+residual autocorrelation this severe (LB = 109.6) cannot produce valid
+prediction intervals: its stated uncertainty will be systematically too narrow
+(because autocorrelated residuals carry information that has not been extracted
+by the model). For a forecast whose primary value is in quantifying uncertainty
+as well as direction, this disqualifies the linear trend model from selection.
+
+## Holdout Forecast Evaluation
+
+```{r}
+#| label: tbl-holdout-accuracy
+#| tbl-cap: "Holdout forecast accuracy (2016–2025, all candidates)"
+holdout_accuracy <- read_csv(file.path(table_dir, "holdout_forecast_accuracy.csv"),
+                             show_col_types = FALSE) |>
+  select(Measure, .model, ME, RMSE, MAE, MAPE, ACF1) |>
+  arrange(Measure, RMSE)
+kable(holdout_accuracy, digits = 3)
+```
+
+```{r}
+#| label: fig-holdout
+#| fig-cap: "Holdout forecast comparison (2016–2025)."
+knitr::include_graphics(file.path(figure_dir, "holdout_forecast_comparison.png"))
+```
+
+```{r}
+#| label: tbl-best-models
+#| tbl-cap: "Best model per series by holdout RMSE (accuracy criterion only)"
+best_holdout <- read_csv(file.path(table_dir, "best_holdout_models.csv"),
+                         show_col_types = FALSE)
+kable(best_holdout, digits = 3)
+```
+
+Note that `best_holdout_models.csv` identifies the linear trend as best for
+live births by RMSE alone. The main report selects Drift instead, because the
+combined accuracy-and-diagnostics criterion is the appropriate basis for model
+selection (see Section 7.3 of the main report).
+
+## Reproducibility Notes
+
+```{r}
+#| label: tbl-manifest
+#| tbl-cap: "Generated output manifest"
+manifest <- read_csv(file.path(table_dir, "output_manifest.csv"),
+                     show_col_types = FALSE)
+kable(manifest)
+```
+
+```{r}
+#| label: tbl-quality-checks
+#| tbl-cap: "Output quality checks"
+quality_checks <- read_csv(file.path(table_dir, "output_quality_checks.csv"),
+                           show_col_types = FALSE)
+kable(quality_checks)
+```
+
+```{r}
+#| label: tbl-report-inputs
+#| tbl-cap: "Report input summary"
+report_inputs <- read_csv(file.path(table_dir, "report_input_summary.csv"),
+                          show_col_types = FALSE)
+kable(report_inputs)
+```
+
+The full workflow is reproducible from the project root using:
+
+```r
+source("scripts/run_project.R")
+```
+
+On Windows, the PowerShell helper script is available:
+
+```powershell
+.\scripts\run_windows_workflow.ps1
+```
+
+R version and package versions at the time of the analysis run recorded above
+in `outputs/tables/session_info.txt`. Key packages: `fable` 0.5.0,
+`feasts` 0.5.0, `fabletools` 0.7.0, `tsibble` 1.2.0, `ggplot2` 4.0.3,
+`dplyr` 1.2.1. R version 4.4.1 (2024-06-14), running under Windows 11.
