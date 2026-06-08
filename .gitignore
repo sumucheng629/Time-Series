@@ -9,6 +9,7 @@ Thumbs.db
 *.pdf
 !report/final_report.pdf
 !report/statistical_appendix.pdf
+!report/zy_report.pdf
 *_files/
 .quarto/
 
